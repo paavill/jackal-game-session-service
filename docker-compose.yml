@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  jackal-game-session-service:
+    container_name: jackal-game-session-service
+    build: .
+    image: jackal-game-session-service
+    ports:
+      - "8000:8000"
