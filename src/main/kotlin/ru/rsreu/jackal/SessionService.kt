@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service
 class SessionService {
 
     private val sessions: HashMap<String, Session> = HashMap()
-
+    //todo: получает запрос на создание сессии, обращается к сервису игры,
+    //который создает игру и Player-ов (наследников User)
     fun createNewSession(id: String){
         sessions[id] = Session(id)
     }
