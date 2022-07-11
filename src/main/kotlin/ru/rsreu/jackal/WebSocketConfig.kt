@@ -2,6 +2,7 @@ package ru.rsreu.jackal
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
@@ -11,12 +12,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 class WebSocketConfig : WebSocketMessageBrokerConfigurer {
     override fun configureMessageBroker(config: MessageBrokerRegistry) {
-        config.setApplicationDestinationPrefixes("/jackal")
+        config.enableSimpleBroker("/jackal-broker")
+        config.setApplicationDestinationPrefixes("/jackal-game")
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/jackal-websocket-connection")
-        registry.addEndpoint("/jackal-websocket-connection").withSockJS()
+        registry.addEndpoint("/jackal-websocket-connection").setAllowedOriginPatterns("*").withSockJS()
     }
 
 

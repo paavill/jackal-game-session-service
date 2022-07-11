@@ -1,18 +1,17 @@
 package ru.rsreu.jackal
 
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.messaging.handler.annotation.DestinationVariable
+import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.messaging.handler.annotation.SendTo
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.stereotype.Controller
 
-@RestController
-class SessionController(private val creator: Creator){
-    private val sessions: HashMap<String, GameSessionController> = HashMap()
-    @GetMapping("/create-new")
-    fun createNewSession(@RequestParam id: String) : ResponseEntity<String> {
-        sessions[id] = creator.createBean(id)
-        println(sessions.size)
-        return ResponseEntity<String>(HttpStatus.OK)
+@Controller
+class SessionController(private val sessionService: SessionService) {
+    @MessageMapping("/action/{id}")
+    @SendTo("/jackal-broker/action-result/{id}")
+    fun printHello(@DestinationVariable("id") id: String): String {
+        println("tyt")
+        return "Hello " + sessionService.getSessionById(id).id
     }
 }
