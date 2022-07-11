@@ -14,4 +14,4 @@ WORKDIR $APP_HOME
 
 COPY --from=TEMP_BUILD_IMAGE $APP_HOME/build/libs/$ARTIFACT_NAME .
 
-ENTRYPOINT java -jar $ARTIFACT_NAME
+ENTRYPOINT java -Dserver.host=$HOST -Dserver.port=$PORT -jar $ARTIFACT_NAME
