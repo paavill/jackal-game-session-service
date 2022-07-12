@@ -1,5 +1,9 @@
 package ru.rsreu.jackal.game
 
-abstract class Game {
-    private val island:
+import ru.rsreu.jackal.game.field.cells.Cell
+
+class Game(players: Map<String, Player>, val field: List<List<Cell>>) {
+    fun applyAction(uid: String, action: Action){
+
+    }
 }

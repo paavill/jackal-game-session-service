@@ -1,4 +1,4 @@
-package ru.rsreu.jackal
+package ru.rsreu.jackal.websocket
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
@@ -17,9 +17,7 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("/jackal-websocket-connection")
         registry.addEndpoint("/jackal-websocket-connection").setAllowedOriginPatterns("*").withSockJS()
     }
-
 
 }

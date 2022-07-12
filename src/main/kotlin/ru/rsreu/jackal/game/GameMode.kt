@@ -1,4 +1,5 @@
 package ru.rsreu.jackal.game
 
-class GameMode {
+enum class GameMode {
+    DEFAULT
 }

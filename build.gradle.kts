@@ -22,6 +22,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	// https://mvnrepository.com/artifact/org.springframework.session/spring-session-data-redis
 	implementation("org.springframework.session:spring-session-data-redis:2.7.0")
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
+	implementation("org.springframework.boot:spring-boot-starter-validation:2.7.1")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

@@ -1,6 +1,6 @@
 package ru.rsreu.jackal.game
 
-import ru.rsreu.jackal.User
+import ru.rsreu.jackal.connection.User
 
 class Player(uid: String) : User(uid) {
 }
