@@ -10,7 +10,7 @@ class SessionService {
     fun createNewSession(request: SessionCreationRequest): String{
         val uuid = UUID.randomUUID()
         val users = request.usersIds.associateWith { id -> User(id) }
-        sessions[uuid.toString()] = Session(uuid.toString(), users)
+        sessions[uuid.toString()] = Session(uuid.toString(), request.gameMode, users)
         return uuid.toString()
     }
 

@@ -1,5 +1,7 @@
 package ru.rsreu.jackal.game
 
-enum class GameMode {
-    DEFAULT
+import ru.rsreu.jackal.game.field.FieldGenerationService
+
+enum class GameMode(val factory: GameFactory) {
+    DEFAULT(DefaultGameFactory())
 }

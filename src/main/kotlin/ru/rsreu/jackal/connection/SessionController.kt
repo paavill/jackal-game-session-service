@@ -1,6 +1,5 @@
 package ru.rsreu.jackal.connection
 
-import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -8,6 +7,7 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.stereotype.Controller
 import ru.rsreu.jackal.game.Action
+import ru.rsreu.jackal.game.DefaultGame
 import ru.rsreu.jackal.game.Game
 import ru.rsreu.jackal.game.GameService
 

@@ -2,5 +2,6 @@ package ru.rsreu.jackal.game
 
 import ru.rsreu.jackal.connection.User
 
-class Player(uid: String) : User(uid) {
+class Player(val uid: String, val pirateTeam: PirateTeam) {
+
 }
