@@ -5,12 +5,15 @@ import ru.rsreu.jackal.game.field.cells.Cell
 import ru.rsreu.jackal.game.field.cells.Sheep
 import ru.rsreu.jackal.game.field.cells.Water
 
-class Field(val cells: List<List<Cell>>) {
-     fun setShips(players: List<Player>) : Map<Player, Sheep> {
+class DefaultGameField(val cells: List<List<Cell>>) {
+    private var isInitFinished = false
+
+    // TODO: 14.07.2022 Добавить метод получения ячейкии по координатам, сделав cells - private
+    fun setShips(players: List<Player>) : Map<Player, Sheep> {
         var playerIndex = 0
         val ships = mutableMapOf<Player, Sheep>()
         cells.forEachIndexed {
-            y, cells ->
+                y, cells ->
             run {
                 cells.forEachIndexed { x, cell ->
                     run {
@@ -25,6 +28,7 @@ class Field(val cells: List<List<Cell>>) {
                 }
             }
         }
-         return ships.toMap()
+        this.isInitFinished = true
+        return ships.toMap()
     }
 }

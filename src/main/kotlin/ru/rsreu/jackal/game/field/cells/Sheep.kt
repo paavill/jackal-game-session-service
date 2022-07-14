@@ -1,16 +1,14 @@
 package ru.rsreu.jackal.game.field.cells
 
 import ru.rsreu.jackal.game.Pirate
-import ru.rsreu.jackal.game.PirateTeam
 import ru.rsreu.jackal.game.Player
-import ru.rsreu.jackal.game.field.CellWithThreePirates
 
 class Sheep(player: Player) : CellWithThreePirates() {
     override val cellType: CellType = CellType.SHEEP
     init {
-
+        this.setAll(player.pirateTeam.getAll())
     }
-    override fun applyAction(pirate: Pirate) {
-        super.applyAction(pirate)
+    override fun applyAction(pirate: Pirate, current: Cell) {
+        super.applyAction(pirate, current)
     }
 }

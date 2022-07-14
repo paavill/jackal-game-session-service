@@ -19,7 +19,7 @@ class SessionController(private val sessionService: SessionService, val gameServ
         sessionService.valideOrThrow(token)
         val session = sessionService.getSessionById(id)
         val game = gameService.getGameBySession(session)
-        game.applyAction("", message)
+        game.applyAction(message)
         return "Hello " + sessionService.getSessionById(id).id
     }
 

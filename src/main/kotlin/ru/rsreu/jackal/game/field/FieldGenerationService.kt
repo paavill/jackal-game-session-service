@@ -1,14 +1,12 @@
 package ru.rsreu.jackal.game.field
 
-import org.springframework.stereotype.Service
-import ru.rsreu.jackal.game.Player
 import ru.rsreu.jackal.game.field.cells.*
 import kotlin.random.Random
 import kotlin.random.nextInt
 class FieldGenerationService private constructor(){
     companion object {
         private val random: Random = Random.Default
-        fun generate() : Field {
+        fun generate() : DefaultGameField {
             val counters = mutableMapOf(*CellType.values().map { type -> type to type.count }.toTypedArray())
             val types = CellType.values()
             var globalCounter = 117
@@ -30,7 +28,7 @@ class FieldGenerationService private constructor(){
                     }
                 }
             }
-            return Field(field)
+            return DefaultGameField(field)
         }
     }
 
