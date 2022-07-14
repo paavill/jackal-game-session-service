@@ -1,19 +1,16 @@
 package ru.rsreu.jackal.game.field.cells
 
-import ru.rsreu.jackal.game.Pirate
+import ru.rsreu.jackal.game.entities.Pirate
 
-abstract class CellWithThreePirates : Cell {
-    private val pirates: MutableList<Pirate> = mutableListOf()
-    override var isClose: Boolean = true
+abstract class CellWithThreePirates : OpenableCell() {
+    override val pirates: MutableList<Pirate> = mutableListOf()
 
     override fun applyAction(pirate: Pirate, current: Cell) {
-        if (isClose) {
-            isClose = false
-        }
         // TODO: 14.07.2022 исключение если идет на ту же ячейку
         val currentWithThreePirates = current as CellWithThreePirates
         currentWithThreePirates.pirates.remove(pirate)
         pirates.add(pirate)
+        super.applyAction(pirate, current)
     }
 
     protected fun setAll(list: List<Pirate>) {

@@ -6,13 +6,12 @@ import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.stereotype.Controller
-import ru.rsreu.jackal.game.Action
-import ru.rsreu.jackal.game.DefaultGame
-import ru.rsreu.jackal.game.Game
-import ru.rsreu.jackal.game.GameService
+import ru.rsreu.jackal.game.*
 
 @Controller
-class SessionController(private val sessionService: SessionService, val gameService: GameService) {
+class SessionController(val sessionService: SessionService,
+                        val gameService: GameService,
+                        val gameStateMapper: GameStateMapper) {
     @MessageMapping("/action/{id}")
     @SendTo("/jackal-broker/action-result/{id}")
     fun gameActionMessageHandler(@DestinationVariable("id") id: String, @Payload message: Action, @Header("jwt_token") token: String): String {
@@ -25,9 +24,10 @@ class SessionController(private val sessionService: SessionService, val gameServ
 
     @MessageMapping("/init-data/{id}")
     @SendTo("/jackal-broker/init-result/{id}")
-    fun initMessageHandler(@DestinationVariable("id") id: String, @Header("jwt_token") token: String) : Game {
+    fun initMessageHandler(@DestinationVariable("id") id: String, @Header("jwt_token") token: String) : InitDataResponse {
         sessionService.valideOrThrow(token)
         val session = sessionService.getSessionById(id)
-        return gameService.createNew(session)
+        val newGame = gameService.createNew(session)
+        return gameStateMapper.map(newGame)
     }
 }

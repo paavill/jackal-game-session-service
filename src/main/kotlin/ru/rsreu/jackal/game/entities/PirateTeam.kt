@@ -1,4 +1,4 @@
-package ru.rsreu.jackal.game
+package ru.rsreu.jackal.game.entities
 
 class PirateTeam(pirate1: Pirate, pirate2: Pirate, pirate3: Pirate) {
     private val pirates: Map<Int, Pirate> = mapOf(

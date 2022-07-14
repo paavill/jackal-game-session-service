@@ -1,11 +1,12 @@
 package ru.rsreu.jackal.game.field
 
-import ru.rsreu.jackal.game.Player
+import ru.rsreu.jackal.game.Field
+import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.cells.Cell
 import ru.rsreu.jackal.game.field.cells.Sheep
 import ru.rsreu.jackal.game.field.cells.Water
 
-class DefaultGameField(val cells: List<List<Cell>>) {
+class DefaultGameField(override val cells: List<List<Cell>>) : Field {
     private var isInitFinished = false
 
     // TODO: 14.07.2022 Добавить метод получения ячейкии по координатам, сделав cells - private

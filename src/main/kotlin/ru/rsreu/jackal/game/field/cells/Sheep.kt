@@ -1,7 +1,7 @@
 package ru.rsreu.jackal.game.field.cells
 
-import ru.rsreu.jackal.game.Pirate
-import ru.rsreu.jackal.game.Player
+import ru.rsreu.jackal.game.entities.Pirate
+import ru.rsreu.jackal.game.entities.Player
 
 class Sheep(player: Player) : CellWithThreePirates() {
     override val cellType: CellType = CellType.SHEEP

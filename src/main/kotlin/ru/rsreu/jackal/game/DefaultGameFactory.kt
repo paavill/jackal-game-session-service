@@ -1,8 +1,9 @@
 package ru.rsreu.jackal.game
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 import ru.rsreu.jackal.connection.User
+import ru.rsreu.jackal.game.entities.Pirate
+import ru.rsreu.jackal.game.entities.PirateTeam
+import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.FieldGenerationService
 
 class DefaultGameFactory() : GameFactory {
