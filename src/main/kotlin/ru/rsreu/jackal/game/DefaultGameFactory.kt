@@ -12,8 +12,8 @@ class DefaultGameFactory() : GameFactory {
             pirateCounter+=3
             uid to Player(uid, PirateTeam(Pirate(pirateCounter), Pirate(pirateCounter + 1), Pirate(pirateCounter + 2)))
         }.toMap()
-        val field = fieldGenerationService.generate()
-        field.setShips(players.values.toList())
-        return DefaultGame( players, field )
+        val field = FieldGenerationService.generate()
+        val ships = field.setShips(players.values.toList())
+        return DefaultGame( players, field , ships)
     }
 }

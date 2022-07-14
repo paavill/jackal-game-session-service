@@ -6,7 +6,7 @@ import ru.rsreu.jackal.game.Player
 import ru.rsreu.jackal.game.field.CellWithThreePirates
 
 class Sheep(player: Player) : CellWithThreePirates() {
-
+    override val cellType: CellType = CellType.SHEEP
     init {
 
     }

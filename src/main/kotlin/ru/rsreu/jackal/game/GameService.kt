@@ -5,16 +5,16 @@ import ru.rsreu.jackal.connection.Session
 import ru.rsreu.jackal.game.field.FieldGenerationService
 
 @Service
-class GameService(val cellGenerationService: FieldGenerationService) {
+class GameService {
 
-    private val games: HashMap<Session, DefaultGame> = HashMap()
+    private val games: HashMap<Session, Game> = HashMap()
 
-    fun getGameBySession(session: Session): DefaultGame {
+    fun getGameBySession(session: Session): Game {
         return games[session]!!
     }
 
     fun createNew(session: Session): Game {
-        session.gameMode.factory.createGame(session.users)
+        games[session] = session.gameMode.factory.createGame(session.users)
         return games[session]!!
     }
 
