@@ -2,7 +2,6 @@ package ru.rsreu.jackal.game
 
 import org.springframework.stereotype.Service
 import ru.rsreu.jackal.connection.Session
-import ru.rsreu.jackal.game.field.FieldGenerationService
 
 @Service
 class GameService {
@@ -13,8 +12,10 @@ class GameService {
         return games[session]!!
     }
 
-    fun createNew(session: Session): Game {
-        games[session] = session.gameMode.factory.createGame(session.users)
+    fun createNewOrReturnExistingGameBySession(session: Session): Game {
+        if (games[session] == null) {
+            games[session] = session.gameMode.factory.createGame(session.users)
+        }
         return games[session]!!
     }
 

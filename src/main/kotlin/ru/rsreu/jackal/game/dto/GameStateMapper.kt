@@ -1,12 +1,13 @@
-package ru.rsreu.jackal.game
+package ru.rsreu.jackal.game.dto
 
 import org.springframework.stereotype.Component
+import ru.rsreu.jackal.game.Game
 import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.Water
 
 @Component
 class GameStateMapper {
-    fun map(game: Game) : InitDataResponse{
+    fun map(game: Game) : InitDataResponse {
         val responseCells = game.field.cells.map { row ->
             row.map { cell ->
                 if (cell.isClose) {
@@ -22,6 +23,6 @@ class GameStateMapper {
                     }, 0)
                 }
         } }
-        return InitDataResponse(game.nextPlayer.uid, responseCells)
+        return InitDataResponse(game.nextPlayer.uid, game.nextPlayer.number, responseCells)
     }
 }

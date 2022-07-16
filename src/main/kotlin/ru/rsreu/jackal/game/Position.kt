@@ -1,4 +1,3 @@
 package ru.rsreu.jackal.game
 
-data class Position(var x: UInt, var y: UInt) {
-}
+data class Position(val x: Int, val y: Int)

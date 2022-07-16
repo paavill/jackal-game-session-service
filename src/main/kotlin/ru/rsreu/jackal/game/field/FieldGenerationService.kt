@@ -1,5 +1,6 @@
 package ru.rsreu.jackal.game.field
 
+import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.field.cells.*
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -15,7 +16,7 @@ class FieldGenerationService private constructor(){
                 List(13) { x ->
                     if ( ((x == 1 || x == 11) && (y == 1 || y == 11)) ||
                         ( x == 0 || x == 12 || y == 0 || y == 12) ) {
-                        Water()
+                        Water(Position(x, y))
                     } else {
                         var ind = random.nextInt(types.indices)
                         while (counters[types[ind]] == 0 && globalCounter > 0){
@@ -24,7 +25,7 @@ class FieldGenerationService private constructor(){
                         val count = counters[types[ind]]!!
                         counters[types[ind]] = count - 1
                         globalCounter--
-                        types[ind].factory!!.createCell()
+                        types[ind].factory!!.createCell(Position(x, y))
                     }
                 }
             }

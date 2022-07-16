@@ -3,8 +3,12 @@ package ru.rsreu.jackal.game.entities
 import ru.rsreu.jackal.game.field.cells.Cell
 
 class Pirate(val number: Int) {
-    private lateinit var cell: Cell
-    fun move(cell: Cell) {
+    var cell: Cell? = null
+        private set
+
+    fun move(cell: Cell) : Cell? {
+        val old = this.cell
         this.cell = cell
+        return old
     }
 }
