@@ -1,6 +1,7 @@
 package ru.rsreu.jackal.connection
 
 import org.springframework.stereotype.Service
+import ru.rsreu.jackal.websocket.security.JwtProvider
 import java.util.UUID
 
 @Service

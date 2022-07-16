@@ -1,4 +1,4 @@
-package ru.rsreu.jackal
+package ru.rsreu.jackal.websocket.security
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
@@ -8,7 +8,7 @@ import org.springframework.messaging.simp.config.ChannelRegistration
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
 
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
-import ru.rsreu.jackal.connection.AuthChannelInterceptor
+import ru.rsreu.jackal.websocket.AuthChannelInterceptor
 
 
 @Configuration
@@ -19,6 +19,6 @@ class WebSocketAuthenticationSecurityConfig(val authChannelInterceptorAdapter: A
     }
 
     override fun configureClientInboundChannel(registration: ChannelRegistration) {
-        registration.setInterceptors(authChannelInterceptorAdapter)
+        registration.interceptors(authChannelInterceptorAdapter)
     }
 }
