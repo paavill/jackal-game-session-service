@@ -5,20 +5,22 @@ import ru.rsreu.jackal.game.ActionResultType
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.entities.Pirate
 
-class Water(position: Position) : CellWithSixPirates(position) {
+class Water(position: Position) : CellWithThreePirates(position) {
     override val cellType: CellType = CellType.WATER
     override var isClose: Boolean = false
-    var sheep: Sheep? = null
+    var ship: Ship? = null
 
     override fun applyAction(pirate: Pirate) : ActionResult {
         val current = pirate.cell
-        if (current is Water && current.sheep != null) {
-            this.sheep = current.sheep
-            current.sheep = null
-        } else if (current is Water && this.sheep != null) {
-            super.applyAction(pirate)
+        if (current is Water && current.ship != null) {
+            this.ship = current.ship
+            current.ship = null
+        } else if (this.ship != null) {
+            this.ship!!.applyAction(pirate)
+        } else if(current!!.cellType != CellType.EMPTY){
+            // TODO: 17.07.2022 Надо определить с каких ячеек пират не может ходить на воду
         }
-        return ActionResult(ActionResultType.FINISHED, null)
+        return super.applyAction(pirate)
     }
 
 }

@@ -7,9 +7,8 @@ class PirateTeam(pirate1: Pirate, pirate2: Pirate, pirate3: Pirate) {
         Pair(pirate3.number, pirate3)
     )
 
-    fun getPirateByNumber(number: Int) : Pirate {
-        // TODO: 14.07.2022 при неправильном номере должна выкидываться ошибка 
-        return pirates[number]!!
+    fun getPirateByNumber(number: Int) : Pirate? {
+        return pirates[number]
     }
 
     fun getAll() : List<Pirate> {

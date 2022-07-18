@@ -2,7 +2,7 @@ package ru.rsreu.jackal.game.entities
 
 import ru.rsreu.jackal.game.field.cells.Cell
 
-class Pirate(val number: Int) {
+class Pirate(val number: Int, val playerId: String) {
     var cell: Cell? = null
         private set
 

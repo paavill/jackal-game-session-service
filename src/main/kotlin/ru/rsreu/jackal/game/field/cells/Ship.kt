@@ -6,8 +6,8 @@ import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
 
-class Sheep(player: Player, position: Position) : CellWithSixPirates(position) {
-    override val cellType: CellType = CellType.SHEEP
+class Ship(player: Player, position: Position) : CellWithThreePirates(position) {
+    override val cellType: CellType = CellType.SHIP
     init {
         this.setAll(player.pirateTeam.getAll())
     }

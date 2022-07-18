@@ -11,14 +11,14 @@ class GameStateMapper {
         val responseCells = game.field.cells.map { row ->
             row.map { cell ->
                 if (cell.isClose) {
-                    CellResponse(CellType.HIDDEN, 0, listOf(), 0)
-                } else if(cell is Water && cell.sheep != null) {
-                    val ship = cell.sheep!!
-                    CellResponse(ship.cellType, 0, ship.pirates.map { pirate ->
+                    CellResponse(CellType.HIDDEN, cell.position, 0, listOf(), 0)
+                } else if(cell is Water && cell.ship != null) {
+                    val ship = cell.ship!!
+                    CellResponse(ship.cellType, cell.position,0, ship.pirates.map { pirate ->
                         pirate.number
                     }, 0)
                 } else {
-                    CellResponse(cell.cellType, 0, cell.pirates.map { pirate ->
+                    CellResponse(cell.cellType, cell.position, 0, cell.pirates.map { pirate ->
                         pirate.number
                     }, 0)
                 }

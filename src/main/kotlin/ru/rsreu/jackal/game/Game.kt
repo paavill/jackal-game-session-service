@@ -7,5 +7,5 @@ import ru.rsreu.jackal.game.field.cells.Cell
 interface Game {
     val field: DefaultGameField
     val nextPlayer: Player
-    fun applyAction(action: Action) : Map<Cell, Position>
+    fun applyAction(action: Action) : List<Cell>
 }

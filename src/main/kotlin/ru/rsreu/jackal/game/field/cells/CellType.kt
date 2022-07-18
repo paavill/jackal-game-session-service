@@ -5,7 +5,7 @@ import ru.rsreu.jackal.game.field.factories.EmptyCellFactory
 
 enum class CellType(val count: Int, val rotationNumber: Int, val skip: Int, val factory : CellFactory?) {
     HIDDEN(0, 0, 0, null),
-    SHEEP(0, 0, 0, null),
+    SHIP(0, 0, 0, null),
     WATER(0, 0, 0, null),
     EMPTY(40, 0, 0, EmptyCellFactory()),
     STRAIGHT_ONE_WAY_ARROW(3, 4, 0, EmptyCellFactory()),
