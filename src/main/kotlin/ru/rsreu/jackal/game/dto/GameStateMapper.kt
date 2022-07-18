@@ -3,7 +3,7 @@ package ru.rsreu.jackal.game.dto
 import org.springframework.stereotype.Component
 import ru.rsreu.jackal.game.Game
 import ru.rsreu.jackal.game.field.cells.CellType
-import ru.rsreu.jackal.game.field.cells.Water
+import ru.rsreu.jackal.game.field.cells.finished.Water
 
 @Component
 class GameStateMapper {

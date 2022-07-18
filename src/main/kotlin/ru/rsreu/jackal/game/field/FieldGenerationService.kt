@@ -2,6 +2,7 @@ package ru.rsreu.jackal.game.field
 
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.field.cells.*
+import ru.rsreu.jackal.game.field.cells.finished.Water
 import kotlin.random.Random
 import kotlin.random.nextInt
 class FieldGenerationService private constructor(){

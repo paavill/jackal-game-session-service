@@ -9,10 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.stereotype.Controller
 import ru.rsreu.jackal.game.*
-import ru.rsreu.jackal.game.dto.CellResponse
-import ru.rsreu.jackal.game.dto.GameApplyActionMapper
-import ru.rsreu.jackal.game.dto.GameStateMapper
-import ru.rsreu.jackal.game.dto.InitDataResponse
+import ru.rsreu.jackal.game.dto.*
 
 @Controller
 class SessionController(val sessionService: SessionService,
@@ -25,12 +22,12 @@ class SessionController(val sessionService: SessionService,
     @SendTo("/jackal-broker/action-result/{id}")
     fun gameActionMessageHandler(@DestinationVariable("id") id: String,
                                  @Payload message: Action,
-                                 principal: PreAuthenticatedAuthenticationToken): List<CellResponse> {
+                                 principal: PreAuthenticatedAuthenticationToken): ActionResponse {
         sessionService.validateOrThrow(principal)
         val session = sessionService.getSessionById(id)
         val game = gameService.getGameBySession(session)
-        val seq = game.applyAction(message)
-        return gameApplyActionMapper.map(seq)
+        val changedCells = game.applyAction(message)
+        return gameApplyActionMapper.map(game.getPlayersAndShips(), changedCells)
     }
 
     @MessageMapping("/init-data/{id}")

@@ -3,8 +3,8 @@ package ru.rsreu.jackal.game.field
 import ru.rsreu.jackal.game.Field
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.cells.Cell
-import ru.rsreu.jackal.game.field.cells.Ship
-import ru.rsreu.jackal.game.field.cells.Water
+import ru.rsreu.jackal.game.field.cells.finished.Ship
+import ru.rsreu.jackal.game.field.cells.finished.Water
 
 class DefaultGameField(cells: List<List<Cell>>) : Field {
     override val cells: List<List<Cell>> = cells
@@ -26,7 +26,7 @@ class DefaultGameField(cells: List<List<Cell>>) : Field {
                     run {
                         if (cell is Water && (x == 8 || y == 8)) {
                             if (playerIndex < players.size) {
-                                cell.ship = Ship(players[playerIndex], cell.position.copy())
+                                cell.ship = Ship(players[playerIndex], cell.position.copy(), cell)
                                 ships[players[playerIndex]] = (cell.ship!!)
                                 playerIndex++
                             }
