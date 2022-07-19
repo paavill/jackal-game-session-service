@@ -16,11 +16,11 @@ class GameStateMapper {
                     val ship = cell.ship!!
                     CellResponse(ship.cellType, cell.position,0, ship.pirates.map { pirate ->
                         pirate.number
-                    }, 0)
+                    }, cell.coinsNumber)
                 } else {
                     CellResponse(cell.cellType, cell.position, 0, cell.pirates.map { pirate ->
                         pirate.number
-                    }, 0)
+                    }, cell.coinsNumber)
                 }
         } }
         return InitDataResponse(game.nextPlayer.uid, game.nextPlayer.number, responseCells)

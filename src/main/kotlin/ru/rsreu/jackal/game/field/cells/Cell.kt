@@ -8,6 +8,7 @@ interface Cell {
     val isClose: Boolean
     val cellType: CellType
     val pirates: MutableList<Pirate>
+    val coinsNumber: Int
     val position: Position
-    fun applyAction(pirate: Pirate) : CellActionResult
+    fun applyAction(pirate: Pirate, needTakeCoins: Boolean) : CellActionResult
 }

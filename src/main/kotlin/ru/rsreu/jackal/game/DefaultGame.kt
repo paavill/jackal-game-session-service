@@ -35,7 +35,7 @@ class DefaultGame(
         var newPosition = Position(gameAction.x, gameAction.y)
         while (flag) {
             val newCell = field.cells[newPosition.y][newPosition.x]
-            val result = newCell.applyAction(pirate)
+            val result = newCell.applyAction(pirate, false)
             sequence.add(newCell)
             if (result.type == CellActionResultType.FINISHED) {
                 flag = false
@@ -49,7 +49,7 @@ class DefaultGame(
                 newPosition = result.position!![0]
                 // TODO: 19.07.2022 Проверка на наличие одного элемента, иначе исключение
             } else if (result.type == CellActionResultType.DIRECTION_QUESTION) {
-                return GameActionResultWithMetaData(sequence, result.position!!)
+                return GameActionResultDirectionQuestion(sequence, result.position!!)
                 // TODO: 19.07.2022 Проверка на наличие листа, иначе исключение
             } else {
                 if (counter < 0) {
@@ -59,6 +59,12 @@ class DefaultGame(
             counter--
         }
         setNextPlayer()
+        for (cells in field.cells) {
+            for (cell in cells) {
+                println(cell.cellType.toString())
+                println(cell.position.toString())
+            }
+        }
         return GameActionResultFinished(sequence.toList())
     }
 
@@ -86,7 +92,7 @@ class DefaultGame(
         }
         //Отправка пиратов на их корабль
         toShip.forEach { pirate ->
-            playersAndShips[players[pirate.playerId]]!!.applyAction(pirate)
+            playersAndShips[players[pirate.playerId]]!!.applyAction(pirate, false)
             setOfChangedCells.add(playersAndShips[players[pirate.playerId]]!!)
         }
         return setOfChangedCells.toList()

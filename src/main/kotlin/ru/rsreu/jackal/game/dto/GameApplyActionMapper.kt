@@ -2,8 +2,9 @@ package ru.rsreu.jackal.game.dto
 
 import org.springframework.stereotype.Component
 import ru.rsreu.jackal.game.action.GameActionResult
+import ru.rsreu.jackal.game.action.GameActionResultDirectionQuestion
+import ru.rsreu.jackal.game.action.GameActionResultFinished
 import ru.rsreu.jackal.game.entities.Player
-import ru.rsreu.jackal.game.field.cells.Cell
 import ru.rsreu.jackal.game.field.cells.finished.Ship
 import ru.rsreu.jackal.game.field.cells.finished.Water
 
@@ -35,8 +36,23 @@ class GameApplyActionMapper {
                 }, 0)
             }
         }
-        TODO()
-        // TODO: 19.07.2022 Добавить два вида ActionResponse (с метаданными и без) 
-        return ActionResponse(playersResponse, changedCellsResponse)
+
+        val result = when (gameActionResult) {
+            is GameActionResultFinished -> {
+                ActionResponseFinished(playersResponse, changedCellsResponse)
+            }
+            is GameActionResultDirectionQuestion -> {
+                ActionResponseDirectionQuestion(
+                    playersResponse,
+                    changedCellsResponse,
+                    gameActionResult.directions
+                )
+            }
+            else -> {
+                throw Exception()
+            }
+        }
+
+        return result
     }
 }

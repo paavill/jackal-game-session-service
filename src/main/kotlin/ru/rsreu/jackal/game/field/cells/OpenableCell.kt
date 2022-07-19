@@ -9,7 +9,7 @@ abstract class OpenableCell(override val position: Position) : Cell {
     override var isClose: Boolean = true
         protected set
 
-    override fun applyAction(pirate: Pirate) : CellActionResult {
+    override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResult {
         if (isClose) {
             isClose = false
         }

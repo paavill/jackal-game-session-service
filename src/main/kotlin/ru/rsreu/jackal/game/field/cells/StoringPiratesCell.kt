@@ -7,6 +7,8 @@ import ru.rsreu.jackal.game.entities.Pirate
 
 abstract class StoringPiratesCell(position: Position) : OpenableCell(position), PirateMoveableCell {
 
+    final override var coinsNumber: Int = 0
+        private set
     final override val pirates: MutableList<Pirate> = mutableListOf()
 
     override fun setPirate(pirate: Pirate): CellActionResultType {
@@ -25,13 +27,13 @@ abstract class StoringPiratesCell(position: Position) : OpenableCell(position), 
         return CellActionResultType.FINISHED
     }
 
-    override fun applyAction(pirate: Pirate): CellActionResult {
+    override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResult {
         // TODO: 14.07.2022 исключение если идет на ту же ячейку
         val old = pirate.move(this)
         val oldMoveAble = old as PirateMoveableCell
         oldMoveAble.removePirate(pirate)
         val actionType = this.setPirate(pirate)
-        super.applyAction(pirate) //всегда возвратит FINISHED; см. OpenAble
+        super.applyAction(pirate, false) //всегда возвратит FINISHED; см. OpenAble
         return CellActionResult(actionType, null)
     }
 
