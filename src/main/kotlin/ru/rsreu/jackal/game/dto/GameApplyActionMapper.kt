@@ -3,7 +3,6 @@ package ru.rsreu.jackal.game.dto
 import org.springframework.stereotype.Component
 import ru.rsreu.jackal.game.action.GameActionResult
 import ru.rsreu.jackal.game.entities.Player
-import ru.rsreu.jackal.game.field.cells.Cell
 import ru.rsreu.jackal.game.field.cells.finished.Ship
 import ru.rsreu.jackal.game.field.cells.finished.Water
 
@@ -12,7 +11,7 @@ class GameApplyActionMapper {
     fun map(players: Map<Player, List<Ship>>, gameActionResult: GameActionResult): ActionResponse {
         val playersResponse = players.map { (player, ships) ->
             PlayerResponse(
-                player.uid,
+                player.id,
                 player.number,
                 PirateTeamResponse(
                     player.pirateTeam.getAll().map { pirate -> pirate.number },

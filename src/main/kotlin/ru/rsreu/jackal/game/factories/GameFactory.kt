@@ -4,5 +4,5 @@ import ru.rsreu.jackal.connection.User
 import ru.rsreu.jackal.game.Game
 
 interface GameFactory {
-    fun createGame(users: Map<String, User>) : Game
+    fun createGame(users: Map<Long, User>): Game
 }
