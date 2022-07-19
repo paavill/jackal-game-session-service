@@ -8,7 +8,6 @@ import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.stereotype.Controller
-import ru.rsreu.jackal.configuration.WebSocketUrlConfiguration
 import ru.rsreu.jackal.game.GameService
 import ru.rsreu.jackal.game.action.GameAction
 import ru.rsreu.jackal.game.dto.ActionResponse

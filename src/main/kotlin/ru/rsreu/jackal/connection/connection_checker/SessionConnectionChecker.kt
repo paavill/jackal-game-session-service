@@ -42,7 +42,7 @@ class SessionConnectionChecker(
     ) {
         fun sendNotStartedInfoToAllClientByWebSocket() {
             simpMessagingTemplate.convertAndSend(
-                "/jackal-broker/init-result/${session.id}",
+                "/jackal-broker/init-result/${session.id}", //TODO вынести и написать Пахану о том, что такое может прилететь (инфа о том, что игра не стартанула) Хоть данное сообщение и потом еще раскидает через лобби всем клиентам
                 GameNotStartedWsResponse(notConnectedUserIds = notConnectedUsersIds)
             )
         }
