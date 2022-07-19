@@ -51,7 +51,6 @@ class SessionConnectionChecker(
             session: Session,
             notConnectedUserIds: List<Long>
         ) {
-            println(GameNotStartedRequest(session.lobbyId, notConnectedUserIds))
             httpClient.postForEntity<Any>(
                 with(enterpriseServiceConfiguration) {
                     baseUrl + notStartedApiUrl
