@@ -1,7 +1,7 @@
 package ru.rsreu.jackal.game.field.cells.finished
 
-import ru.rsreu.jackal.game.ActionResult
-import ru.rsreu.jackal.game.ActionResultType
+import ru.rsreu.jackal.game.field.cells.action.CellActionResult
+import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.field.cells.CellType
@@ -12,7 +12,7 @@ class Water(position: Position) : KillAbleByFightCell(position) {
     override var isClose: Boolean = false
     var ship: Ship? = null
 
-    override fun applyAction(pirate: Pirate): ActionResult {
+    override fun applyAction(pirate: Pirate): CellActionResult {
         val current = pirate.cell
         if (current is Ship && this.ship == null) {
             val oldWater = current.move(this)
@@ -24,7 +24,7 @@ class Water(position: Position) : KillAbleByFightCell(position) {
             // TODO: 17.07.2022 Надо определить с каких ячеек пират не может ходить на воду
             return super.applyAction(pirate)
         }
-        return ActionResult(ActionResultType.FINISHED, null)
+        return CellActionResult(CellActionResultType.FINISHED, null)
     }
 
 }

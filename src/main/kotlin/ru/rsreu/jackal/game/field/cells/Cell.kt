@@ -1,6 +1,6 @@
 package ru.rsreu.jackal.game.field.cells
 
-import ru.rsreu.jackal.game.ActionResult
+import ru.rsreu.jackal.game.field.cells.action.CellActionResult
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.entities.Pirate
 
@@ -9,5 +9,5 @@ interface Cell {
     val cellType: CellType
     val pirates: MutableList<Pirate>
     val position: Position
-    fun applyAction(pirate: Pirate) : ActionResult
+    fun applyAction(pirate: Pirate) : CellActionResult
 }

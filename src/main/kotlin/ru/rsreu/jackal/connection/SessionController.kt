@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.stereotype.Controller
 import ru.rsreu.jackal.game.*
 import ru.rsreu.jackal.game.dto.*
+import ru.rsreu.jackal.game.action.GameAction
 
 @Controller
 class SessionController(val sessionService: SessionService,
@@ -21,7 +22,7 @@ class SessionController(val sessionService: SessionService,
     @MessageMapping("/action/{id}")
     @SendTo("/jackal-broker/action-result/{id}")
     fun gameActionMessageHandler(@DestinationVariable("id") id: String,
-                                 @Payload message: Action,
+                                 @Payload message: GameAction,
                                  principal: PreAuthenticatedAuthenticationToken): ActionResponse {
         sessionService.validateOrThrow(principal)
         val session = sessionService.getSessionById(id)

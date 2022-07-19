@@ -1,14 +1,18 @@
 package ru.rsreu.jackal.game
 
+import ru.rsreu.jackal.game.action.*
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.DefaultGameField
 import ru.rsreu.jackal.game.field.cells.Cell
+import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 import ru.rsreu.jackal.game.field.cells.finished.Ship
 
-class DefaultGame(private val players: Map<String, Player>,
-                  override val field: DefaultGameField,
-                  private val playersAndShips: Map<Player, Ship>) : Game {
+class DefaultGame(
+    private val players: Map<String, Player>,
+    override val field: DefaultGameField,
+    private val playersAndShips: Map<Player, Ship>
+) : Game {
 
     override var nextPlayer: Player = players.values.first()
         private set
@@ -19,37 +23,47 @@ class DefaultGame(private val players: Map<String, Player>,
         }.toMap()
     }
 
-    override fun applyAction(action: Action) : List<Cell>{
+    override fun applyAction(gameAction: GameAction): GameActionResult {
         var flag = true
+        var counter = 100
         val sequence = mutableListOf<Cell>()
-        playerPirateNumberValidate(nextPlayer, action.pirateNumber)
+        playerPirateNumberValidate(nextPlayer, gameAction.pirateNumber)
 
-        val pirate = nextPlayer.pirateTeam.getPirateByNumber(action.pirateNumber)!!
+        val pirate = nextPlayer.pirateTeam.getPirateByNumber(gameAction.pirateNumber)!!
         sequence.add(pirate.cell!!)
 
-        var newPosition = Position(action.x, action.y)
+        var newPosition = Position(gameAction.x, gameAction.y)
         while (flag) {
             val newCell = field.cells[newPosition.y][newPosition.x]
             val result = newCell.applyAction(pirate)
             sequence.add(newCell)
-            if(result.type == ActionResultType.FINISHED) {
+            if (result.type == CellActionResultType.FINISHED) {
                 flag = false
-            } else if (result.type == ActionResultType.FINISHED_WITH_FIGHT) {
+            } else if (result.type == CellActionResultType.FINISHED_WITH_FIGHT) {
                 sequence.addAll(fight(pirate.playerId, newCell))
                 flag = false
-            } else if (result.type == ActionResultType.FINISHED_WITH_KILL) {
+            } else if (result.type == CellActionResultType.FINISHED_WITH_KILL) {
                 kill(pirate)
                 flag = false
+            } else if (result.type == CellActionResultType.IN_PROCESS) {
+                newPosition = result.position!![0]
+                // TODO: 19.07.2022 Проверка на наличие одного элемента, иначе исключение
+            } else if (result.type == CellActionResultType.DIRECTION_QUESTION) {
+                return GameActionResultWithMetaData(sequence, result.position!!)
+                // TODO: 19.07.2022 Проверка на наличие листа, иначе исключение
             } else {
-                newPosition = result.position!!
+                if (counter < 0) {
+                    // TODO: 19.07.2022 Исключение зацикливания
+                }
             }
+            counter--
         }
         setNextPlayer()
-        return sequence.toList()
+        return GameActionResultFinished(sequence.toList())
     }
 
     private fun setNextPlayer() {
-        nextPlayer = if(players.values.indexOf(nextPlayer) + 1 < players.values.size) {
+        nextPlayer = if (players.values.indexOf(nextPlayer) + 1 < players.values.size) {
             players.values.toList()[players.values.indexOf(nextPlayer) + 1]
         } else {
             players.values.first()
@@ -61,7 +75,7 @@ class DefaultGame(private val players: Map<String, Player>,
         nextPlayer.pirateTeam.killPirate(pirate)
     }
 
-    private fun fight(fightPiratePlayerId: String, cell: Cell) : List<Cell> {
+    private fun fight(fightPiratePlayerId: String, cell: Cell): List<Cell> {
         val toShip = mutableListOf<Pirate>()
         val setOfChangedCells = mutableSetOf<Cell>()
         //Удаление пиратов из ячейки
@@ -78,7 +92,7 @@ class DefaultGame(private val players: Map<String, Player>,
         return setOfChangedCells.toList()
     }
 
-    private fun playerPirateNumberValidate(player: Player,  number: Int) {
+    private fun playerPirateNumberValidate(player: Player, number: Int) {
         if (player.pirateTeam.getPirateByNumber(number) == null) {
             // TODO: 14.07.2022 Исключение: если нет пирата с таким номером
             println("ошибка: не тот пират")
