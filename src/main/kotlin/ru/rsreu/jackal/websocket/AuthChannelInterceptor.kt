@@ -8,14 +8,13 @@ import org.springframework.messaging.support.MessageHeaderAccessor
 import org.springframework.stereotype.Component
 import ru.rsreu.jackal.websocket.security.JwtProvider
 
-
 @Component
 class AuthChannelInterceptor(val jwtProvider: JwtProvider) : ChannelInterceptor {
     override fun preSend(message: Message<*>, channel: MessageChannel): Message<*>? {
         val accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor::class.java)
         if (accessor!!.user == null) {
             val auth = jwtProvider.runCatching {
-                getAuthenticationFromToken(accessor!!.getFirstNativeHeader("jwt_token")!!)
+                getAuthenticationFromToken(accessor.getFirstNativeHeader("jwt_token")!!)
             }.getOrNull()
             accessor.user = auth
         }

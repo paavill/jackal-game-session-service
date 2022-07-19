@@ -13,7 +13,7 @@ class GameApplyActionMapper {
     fun map(players: Map<Player, List<Ship>>, gameActionResult: GameActionResult): ActionResponse {
         val playersResponse = players.map { (player, ships) ->
             PlayerResponse(
-                player.uid,
+                player.id,
                 player.number,
                 PirateTeamResponse(
                     player.pirateTeam.getAll().map { pirate -> pirate.number },

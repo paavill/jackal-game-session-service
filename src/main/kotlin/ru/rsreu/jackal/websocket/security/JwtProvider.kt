@@ -13,16 +13,16 @@ import javax.crypto.SecretKey
 @Component
 class JwtProvider {
     val key: SecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512)
-    fun getJwt(user: User, session: Session) : String {
+    fun getJwt(user: User, session: Session): String {
         return Jwts.builder()
             .setSubject("user")
-            .claim("userId", user.uid)
+            .claim("userId", user.id)
             .claim("sessionId", session.id)
             .signWith(key)
             .compact()
     }
 
-    fun getAuthenticationFromToken(token: String) : Authentication {
+    fun getAuthenticationFromToken(token: String): Authentication {
         val map = Jwts.parserBuilder()
             .setSigningKey(key)
             .build()

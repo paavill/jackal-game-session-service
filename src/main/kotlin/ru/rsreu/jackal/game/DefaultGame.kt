@@ -1,6 +1,9 @@
 package ru.rsreu.jackal.game
 
-import ru.rsreu.jackal.game.action.*
+import ru.rsreu.jackal.game.action.GameAction
+import ru.rsreu.jackal.game.action.GameActionResult
+import ru.rsreu.jackal.game.action.GameActionResultFinished
+import ru.rsreu.jackal.game.action.GameActionResultWithMetaData
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.DefaultGameField
@@ -9,7 +12,7 @@ import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 import ru.rsreu.jackal.game.field.cells.finished.Ship
 
 class DefaultGame(
-    private val players: Map<String, Player>,
+    private val players: Map<Long, Player>,
     override val field: DefaultGameField,
     private val playersAndShips: Map<Player, Ship>
 ) : Game {
@@ -81,7 +84,7 @@ class DefaultGame(
         nextPlayer.pirateTeam.killPirate(pirate)
     }
 
-    private fun fight(fightPiratePlayerId: String, cell: Cell): List<Cell> {
+    private fun fight(fightPiratePlayerId: Long, cell: Cell): List<Cell> {
         val toShip = mutableListOf<Pirate>()
         val setOfChangedCells = mutableSetOf<Cell>()
         //Удаление пиратов из ячейки
