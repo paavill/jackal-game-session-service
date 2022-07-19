@@ -1,6 +1,11 @@
 package ru.rsreu.jackal.game.field.cells
 
 import ru.rsreu.jackal.game.field.factories.*
+import ru.rsreu.jackal.game.field.factories.arrows.DiagonalOneWayArrowCellFactory
+import ru.rsreu.jackal.game.field.factories.arrows.DiagonalTwoWayArrowCellFactory
+import ru.rsreu.jackal.game.field.factories.arrows.StraightOneWayArrowCellFactory
+import ru.rsreu.jackal.game.field.factories.arrows.StraightTwoWayArrowCellFactory
+import ru.rsreu.jackal.game.field.factories.chests.*
 
 enum class CellType(val count: Int, val rotationNumber: Int, val skip: Int, val factory : CellFactory?) {
     HIDDEN(0, 0, 0, null),
@@ -26,12 +31,12 @@ enum class CellType(val count: Int, val rotationNumber: Int, val skip: Int, val 
     CANNIBAL(1, 0, 0, EmptyCellFactory()),
     FORTRESS(2,0, 0, EmptyCellFactory()),
     NATIVE(1, 0, 0, EmptyCellFactory()),
-    CHEST_1(5,0, 0, EmptyCellFactory()),
-    CHEST_2(5, 0, 0, EmptyCellFactory()),
-    CHEST_3(3, 0, 0, EmptyCellFactory()),
-    CHEST_4(2, 0, 0, EmptyCellFactory()),
-    CHEST_5(1, 0, 0, EmptyCellFactory()),
-    BALL(2, 0, 0, EmptyCellFactory()),
+    CHEST_1(5,0, 0, ChestOneCoinFactory()),
+    CHEST_2(5, 0, 0, ChestTwoCoinFactory()),
+    CHEST_3(3, 0, 0, ChestThreeCoinFactory()),
+    CHEST_4(2, 0, 0, ChestFourCoinFactory()),
+    CHEST_5(1, 0, 0, ChestFiveCoinFactory()),
+    BALL(2, 0, 0, BallCellFactory()),
     AIRPLANE(1, 0, 0, EmptyCellFactory()),
     GUN(2, 4, 0, EmptyCellFactory()),
 }

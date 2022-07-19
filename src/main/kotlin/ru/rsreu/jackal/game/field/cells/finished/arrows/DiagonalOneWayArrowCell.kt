@@ -1,9 +1,9 @@
-package ru.rsreu.jackal.game.field.cells.finished
+package ru.rsreu.jackal.game.field.cells.finished.arrows
 
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.field.cells.CellType
-import ru.rsreu.jackal.game.field.cells.RotatedCell
+import ru.rsreu.jackal.game.field.cells.abstracted.RotatedCell
 import ru.rsreu.jackal.game.field.cells.action.CellActionResult
 import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 

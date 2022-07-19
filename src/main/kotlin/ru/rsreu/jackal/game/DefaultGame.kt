@@ -9,20 +9,20 @@ import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.DefaultGameField
 import ru.rsreu.jackal.game.field.cells.Cell
 import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
-import ru.rsreu.jackal.game.field.cells.finished.Ship
+import ru.rsreu.jackal.game.field.cells.finished.ShipCell
 
 class DefaultGame(
     private val players: Map<Long, Player>,
     override val field: DefaultGameField,
-    private val playersAndShips: Map<Player, Ship>
+    private val playersAndShips: Map<Player, ShipCell>
 ) : Game {
 
     override var nextPlayer: Player = players.values.first()
         private set
 
-    override fun getPlayersAndShips(): Map<Player, List<Ship>> {
+    override fun getPlayersAndShips(): Map<Player, List<ShipCell>> {
         return playersAndShips.map { (player, ship) ->
-            player to listOf<Ship>(ship)
+            player to listOf<ShipCell>(ship)
         }.toMap()
     }
 
@@ -54,6 +54,8 @@ class DefaultGame(
             } else if (result.type == CellActionResultType.DIRECTION_QUESTION) {
                 return GameActionResultDirectionQuestion(sequence, result.position!!)
                 // TODO: 19.07.2022 Проверка на наличие листа, иначе исключение
+            } else if (result.type == CellActionResultType.IN_PROCESS_WITH_TELEPORT_ON_SHIP) {
+                newPosition = getPirateShip(pirate).position
             } else {
                 if (counter < 0) {
                     // TODO: 19.07.2022 Исключение зацикливания
@@ -84,6 +86,10 @@ class DefaultGame(
         nextPlayer.pirateTeam.killPirate(pirate)
     }
 
+    private fun getPirateShip(pirate: Pirate) : ShipCell {
+        return playersAndShips[players[pirate.playerId]]!!
+    }
+
     private fun fight(fightPiratePlayerId: Long, cell: Cell): List<Cell> {
         val toShip = mutableListOf<Pirate>()
         val setOfChangedCells = mutableSetOf<Cell>()
@@ -95,8 +101,8 @@ class DefaultGame(
         }
         //Отправка пиратов на их корабль
         toShip.forEach { pirate ->
-            playersAndShips[players[pirate.playerId]]!!.applyAction(pirate, false)
-            setOfChangedCells.add(playersAndShips[players[pirate.playerId]]!!)
+            getPirateShip(pirate).applyAction(pirate, false)
+            setOfChangedCells.add(getPirateShip(pirate))
         }
         return setOfChangedCells.toList()
     }

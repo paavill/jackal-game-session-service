@@ -1,4 +1,4 @@
-package ru.rsreu.jackal.game.field.cells
+package ru.rsreu.jackal.game.field.cells.abstracted
 
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.entities.Pirate

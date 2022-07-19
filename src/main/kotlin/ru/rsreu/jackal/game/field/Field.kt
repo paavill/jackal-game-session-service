@@ -1,4 +1,4 @@
-package ru.rsreu.jackal.game
+package ru.rsreu.jackal.game.field
 
 import ru.rsreu.jackal.game.field.cells.Cell
 

@@ -1,15 +1,30 @@
-package ru.rsreu.jackal.game.field.cells
+package ru.rsreu.jackal.game.field.cells.abstracted
 
-import ru.rsreu.jackal.game.field.cells.action.CellActionResult
-import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.entities.Pirate
+import ru.rsreu.jackal.game.field.cells.CoinMoveableCell
+import ru.rsreu.jackal.game.field.cells.PirateMoveableCell
+import ru.rsreu.jackal.game.field.cells.action.CellActionResult
+import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 
-abstract class StoringPiratesCell(position: Position) : OpenableCell(position), PirateMoveableCell {
+abstract class StoringPiratesCell(position: Position) : OpenableCell(position), PirateMoveableCell, CoinMoveableCell {
 
     override var coinsNumber: Int = 0
         protected set
     final override val pirates: MutableList<Pirate> = mutableListOf()
+
+    override fun setCoin() {
+        coinsNumber++
+    }
+
+    override fun removeCoin() {
+        if (coinsNumber > 0) {
+            coinsNumber--
+        } else {
+            // TODO: 19.07.2022
+            throw Exception("Слишком мало монет")
+        }
+    }
 
     override fun setPirate(pirate: Pirate): CellActionResultType {
         pirates.add(pirate)
@@ -30,10 +45,19 @@ abstract class StoringPiratesCell(position: Position) : OpenableCell(position), 
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResult {
         // TODO: 14.07.2022 исключение если идет на ту же ячейку
         val old = pirate.move(this)
-        val oldMoveAble = old as PirateMoveableCell
-        oldMoveAble.removePirate(pirate)
+        old as PirateMoveableCell
+        old as CoinMoveableCell
+
+        old.removePirate(pirate)
+        if (needTakeCoins) {
+            old.removeCoin()
+        }
         val actionType = this.setPirate(pirate)
-        super.applyAction(pirate, false) //всегда возвратит FINISHED; см. OpenAble
+        if (needTakeCoins) {
+            this.setCoin()
+        }
+
+        super.applyAction(pirate, false) //всегда возвратит FINISHED; см. Openable
         return CellActionResult(actionType, null)
     }
 
