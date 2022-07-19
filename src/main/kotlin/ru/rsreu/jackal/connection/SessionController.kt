@@ -8,9 +8,12 @@ import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.stereotype.Controller
-import ru.rsreu.jackal.game.*
-import ru.rsreu.jackal.game.dto.*
+import ru.rsreu.jackal.configuration.WebSocketUrlConfiguration
+import ru.rsreu.jackal.game.GameService
 import ru.rsreu.jackal.game.action.GameAction
+import ru.rsreu.jackal.game.dto.ActionResponse
+import ru.rsreu.jackal.game.dto.GameApplyActionMapper
+import ru.rsreu.jackal.game.dto.GameStateMapper
 
 @Controller
 class SessionController(
@@ -35,23 +38,24 @@ class SessionController(
     }
 
     @MessageMapping("/init-data/{id}")
-    @SendTo("/jackal-broker/init-result/{id}")
     fun initMessageHandler(
         @DestinationVariable("id") id: String,
         @Payload message: Message<*>,
         principal: PreAuthenticatedAuthenticationToken
-    ): String {
+    ) {
         sessionService.validateOrThrow(principal)
         val userId = principal.principal.toString().toLong()
         val session = sessionService.getSessionById(id)
         val newGame = gameService.createNewOrReturnExistingGameBySession(session)
-        val user =
-            session.users[userId] ?: throw IllegalArgumentException() // TODO Исключение: пользоваетль не в этом лобби
+        val user = session.getUserByIdOrThrow(userId)
         user.isConnected = true
         simpMessagingTemplate.convertAndSendToUser(
             userId.toString(),
-            "/jackal-broker/init-result/$id", gameStateMapper.map(newGame)
+            "/jackal-broker/action-result/$id", gameStateMapper.map(newGame)
         )
-        return "Player $userId connected"
+        simpMessagingTemplate.convertAndSend(
+            "/jackal-broker/action-result/$id",
+            "User with id: ${user.id} connected"
+        )
     }
 }

@@ -3,7 +3,7 @@ package ru.rsreu.jackal.game
 import ru.rsreu.jackal.game.action.GameAction
 import ru.rsreu.jackal.game.action.GameActionResult
 import ru.rsreu.jackal.game.action.GameActionResultFinished
-import ru.rsreu.jackal.game.action.GameActionResultWithMetaData
+import ru.rsreu.jackal.game.action.GameActionResultDirectionQuestion
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.DefaultGameField

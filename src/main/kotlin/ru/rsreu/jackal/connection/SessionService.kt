@@ -9,14 +9,14 @@ import java.util.*
 class SessionService(val jwtProvider: JwtProvider) {
     private val sessions: HashMap<String, Session> = HashMap()
 
-    fun createNewSession(request: SessionCreationRequest): SessionCreationResponse {
+    fun createNewSession(request: SessionCreationRequest): SessionCreationInformation {
         val uuid = UUID.randomUUID()
         val users = request.usersIds.associateWith { id -> User(id) }
         sessions[uuid.toString()] = Session(uuid.toString(), request.lobbyId, request.gameMode, users)
         val userIdAndJwtMap = users.map { (id, user) ->
             id to jwtProvider.getJwt(user, sessions[uuid.toString()]!!)
         }.toMap()
-        return SessionCreationResponse(uuid.toString(), userIdAndJwtMap)
+        return SessionCreationInformation(uuid.toString(), userIdAndJwtMap)
     }
 
     fun getSessionById(id: String): Session = sessions[id]!!

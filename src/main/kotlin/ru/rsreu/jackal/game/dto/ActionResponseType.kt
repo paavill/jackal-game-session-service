@@ -1,6 +1,7 @@
 package ru.rsreu.jackal.game.dto
 
 enum class ActionResponseType {
-    FINISHED,
-    DIRECTION_QUESTION
+    GAME_ACTION_COMPLETED,
+    DIRECTION_QUESTION,
+    INIT_INFORMATION
 }

@@ -19,10 +19,10 @@ class Water(position: Position) : KillAbleByFightCell(position) {
             oldWater.ship = null
             this.ship = current
         } else if (this.ship != null) {
-            return this.ship!!.applyAction(pirate, false)
+            return this.ship!!.applyAction(pirate, needTakeCoins)
         } else if (current !is EmptyCell) {
             // TODO: 17.07.2022 Надо определить с каких ячеек пират не может ходить на воду
-            return super.applyAction(pirate, false)
+            return super.applyAction(pirate, needTakeCoins)
         }
         return CellActionResult(CellActionResultType.FINISHED, null)
     }

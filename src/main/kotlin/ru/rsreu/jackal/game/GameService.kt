@@ -14,7 +14,7 @@ class GameService {
 
     fun createNewOrReturnExistingGameBySession(session: Session): Game {
         if (games[session] == null) {
-            games[session] = session.gameMode.factory.createGame(session.users)
+            games[session] = session.gameMode.factory.createGame(session.getUserIdToUserMap())
         }
         return games[session]!!
     }

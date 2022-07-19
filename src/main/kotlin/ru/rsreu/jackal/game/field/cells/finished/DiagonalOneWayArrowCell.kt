@@ -7,18 +7,19 @@ import ru.rsreu.jackal.game.field.cells.RotatedCell
 import ru.rsreu.jackal.game.field.cells.action.CellActionResult
 import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 
-class StraightTwoWayArrowCell(position: Position, rotation: Int) : RotatedCell(position, rotation) {
-    override val cellType: CellType = CellType.STRAIGHT_TWO_WAY_ARROW
+class DiagonalOneWayArrowCell(position: Position, rotation: Int) : RotatedCell(position, rotation) {
+    override val cellType: CellType = CellType.DIAGONAL_ONE_WAY_ARROW
 
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResult {
         val result = when (rotation) {
-            0 -> listOf(this.position.sub(Position(0, 1)), this.position.add(Position(0, 1)))
-            1 -> listOf(this.position.sub(Position(1, 0)), this.position.add(Position(1, 0)))
-            else -> {
-                listOf(Position(0, 0))
-            }
+            0 -> this.position.sub(Position(1, 1))
+            1 -> this.position.add(Position(1, 1))
+            2 -> this.position.add(Position(1, 1))
+            3 -> this.position.sub(Position(1, 1))
+            else -> Position(0, 0)
         }
         super.applyAction(pirate, needTakeCoins)
-        return CellActionResult(CellActionResultType.DIRECTION_QUESTION, result)
+        return CellActionResult(CellActionResultType.IN_PROCESS, listOf(result))
     }
+
 }

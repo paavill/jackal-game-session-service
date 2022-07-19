@@ -1,9 +1,7 @@
 server:
   host: "localhost"
-  port: 8030
-  servlet:
-    session:
-      timeout: 5s
+  port: 8080
+
 connection:
   checker:
     delay-s: 10
@@ -11,3 +9,9 @@ connection:
 enterprise:
   base_url: "http://localhost:8080/api"
   not_started_url: "/game/resolve-not-started"
+
+websocket:
+  url_pattern:
+    sending: "/action/"
+    receiving: "/jackal-broker/action-result/"
+    receiving_personal: "/user/jackal-broker/action-result/"

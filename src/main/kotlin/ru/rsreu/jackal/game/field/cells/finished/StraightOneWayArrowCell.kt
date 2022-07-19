@@ -18,7 +18,7 @@ class StraightOneWayArrowCell(position: Position, rotation: Int) : RotatedCell(p
             3 -> this.position.sub(Position(1, 0))
             else -> Position(0, 0)
         }
-        super.applyAction(pirate, false)
+        super.applyAction(pirate, needTakeCoins)
         return CellActionResult(CellActionResultType.IN_PROCESS, listOf(result))
     }
 

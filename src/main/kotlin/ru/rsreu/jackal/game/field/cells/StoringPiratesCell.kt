@@ -7,8 +7,8 @@ import ru.rsreu.jackal.game.entities.Pirate
 
 abstract class StoringPiratesCell(position: Position) : OpenableCell(position), PirateMoveableCell {
 
-    final override var coinsNumber: Int = 0
-        private set
+    override var coinsNumber: Int = 0
+        protected set
     final override val pirates: MutableList<Pirate> = mutableListOf()
 
     override fun setPirate(pirate: Pirate): CellActionResultType {

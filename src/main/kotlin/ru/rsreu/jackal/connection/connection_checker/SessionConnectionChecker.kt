@@ -65,7 +65,7 @@ class SessionConnectionChecker(
     }
 
     private fun getNotConnectedUsersIds(session: Session): List<Long> {
-        return session.users.values.filter {
+        return session.getAllUsers().filter {
             !it.isConnected
         }.map {
             it.id
