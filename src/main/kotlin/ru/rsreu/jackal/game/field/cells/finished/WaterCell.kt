@@ -5,16 +5,16 @@ import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.field.cells.CellType
-import ru.rsreu.jackal.game.field.cells.KillAbleByFightCell
+import ru.rsreu.jackal.game.field.cells.abstracted.KillAbleByFightCell
 
-class Water(position: Position) : KillAbleByFightCell(position) {
+class WaterCell(position: Position) : KillAbleByFightCell(position) {
     override val cellType: CellType = CellType.WATER
     override var isClose: Boolean = false
-    var ship: Ship? = null
+    var ship: ShipCell? = null
 
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResult {
         val current = pirate.cell
-        if (current is Ship && this.ship == null) {
+        if (current is ShipCell && this.ship == null) {
             val oldWater = current.move(this)
             oldWater.ship = null
             this.ship = current

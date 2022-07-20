@@ -1,10 +1,9 @@
 package ru.rsreu.jackal.game.field
 
-import ru.rsreu.jackal.game.Field
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.cells.Cell
-import ru.rsreu.jackal.game.field.cells.finished.Ship
-import ru.rsreu.jackal.game.field.cells.finished.Water
+import ru.rsreu.jackal.game.field.cells.finished.ShipCell
+import ru.rsreu.jackal.game.field.cells.finished.WaterCell
 
 class DefaultGameField(cells: List<List<Cell>>) : Field {
     override val cells: List<List<Cell>> = cells
@@ -16,17 +15,17 @@ class DefaultGameField(cells: List<List<Cell>>) : Field {
         }
     private var isInitFinished = false
 
-    fun setShips(players: List<Player>) : Map<Player, Ship> {
+    fun setShips(players: List<Player>) : Map<Player, ShipCell> {
         var playerIndex = 0
-        val ships = mutableMapOf<Player, Ship>()
+        val ships = mutableMapOf<Player, ShipCell>()
         cells.forEachIndexed {
                 y, cells ->
             run {
                 cells.forEachIndexed { x, cell ->
                     run {
-                        if (cell is Water && (x == 8 || y == 8)) {
+                        if (cell is WaterCell && (x == 8 || y == 8)) {
                             if (playerIndex < players.size) {
-                                cell.ship = Ship(players[playerIndex], cell.position.copy(), cell)
+                                cell.ship = ShipCell(players[playerIndex], cell.position.copy(), cell)
                                 ships[players[playerIndex]] = (cell.ship!!)
                                 playerIndex++
                             }

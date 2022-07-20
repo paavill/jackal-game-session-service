@@ -5,9 +5,9 @@ import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.cells.CellType
-import ru.rsreu.jackal.game.field.cells.ThreePiratesStoringCell
+import ru.rsreu.jackal.game.field.cells.abstracted.ThreePiratesStoringCell
 
-class Ship(private val player: Player, position: Position, private var water: Water) : ThreePiratesStoringCell(position) {
+class ShipCell(private val player: Player, position: Position, private var water: WaterCell) : ThreePiratesStoringCell(position) {
     override val cellType: CellType = CellType.SHIP
 
     init {
@@ -23,7 +23,7 @@ class Ship(private val player: Player, position: Position, private var water: Wa
         return result
     }
 
-    fun move(newWater: Water): Water {
+    fun move(newWater: WaterCell): WaterCell {
         val old = this.water
         this.water = newWater
         return old

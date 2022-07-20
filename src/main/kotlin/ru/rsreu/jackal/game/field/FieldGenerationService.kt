@@ -2,7 +2,7 @@ package ru.rsreu.jackal.game.field
 
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.field.cells.*
-import ru.rsreu.jackal.game.field.cells.finished.Water
+import ru.rsreu.jackal.game.field.cells.finished.WaterCell
 import kotlin.random.Random
 import kotlin.random.nextInt
 class FieldGenerationService private constructor(){
@@ -17,7 +17,7 @@ class FieldGenerationService private constructor(){
                 List(13) { x ->
                     if ( ((x == 1 || x == 11) && (y == 1 || y == 11)) ||
                         ( x == 0 || x == 12 || y == 0 || y == 12) ) {
-                        Water(Position(x, y))
+                        WaterCell(Position(x, y))
                     } else {
                         var ind = random.nextInt(types.indices)
                         while (counters[types[ind]] == 0 && globalCounter > 0){
@@ -29,6 +29,13 @@ class FieldGenerationService private constructor(){
                         types[ind].factory!!.createCell(Position(x, y))
                     }
                 }
+            }
+            field.forEach { row ->
+                print("[ ")
+                row.forEach { cell ->
+                    print(" | " + cell.cellType + " | ")
+                }
+                println(" ]")
             }
             return DefaultGameField(field)
         }
