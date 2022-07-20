@@ -14,6 +14,10 @@ class ShipCell(private val player: Player, position: Position, private var water
         this.setAll(player.pirateTeam.getAll())
     }
 
+    override fun removeCoin() {
+        //Должен быть пустым, чтобы нельзя было уносить монеты с корабля
+    }
+
     override fun setPirate(pirate: Pirate): CellActionResultType {
         val result = super.setPirate(pirate)
         if (!player.pirateTeam.isPirateIn(pirate)) {
