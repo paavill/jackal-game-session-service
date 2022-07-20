@@ -2,8 +2,8 @@ package ru.rsreu.jackal.game
 
 import ru.rsreu.jackal.game.action.GameAction
 import ru.rsreu.jackal.game.action.GameActionResult
-import ru.rsreu.jackal.game.action.GameActionResultFinished
 import ru.rsreu.jackal.game.action.GameActionResultDirectionQuestion
+import ru.rsreu.jackal.game.action.GameActionResultFinished
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.DefaultGameField
@@ -20,9 +20,13 @@ class DefaultGame(
     override var nextPlayer: Player = players.values.first()
         private set
 
+    private var directionVariants: List<Position>? = null
+
+    private val piratesSkippingAction = mutableMapOf<Player, Pirate>()
+
     override fun getPlayersAndShips(): Map<Player, List<ShipCell>> {
         return playersAndShips.map { (player, ship) ->
-            player to listOf<ShipCell>(ship)
+            player to listOf(ship)
         }.toMap()
     }
 
@@ -52,7 +56,8 @@ class DefaultGame(
                 newPosition = result.position!![0]
                 // TODO: 19.07.2022 Проверка на наличие одного элемента, иначе исключение
             } else if (result.type == CellActionResultType.DIRECTION_QUESTION) {
-                return GameActionResultDirectionQuestion(sequence, result.position!!)
+                directionVariants = result.position!!
+                return GameActionResultDirectionQuestion(sequence, result.position)
                 // TODO: 19.07.2022 Проверка на наличие листа, иначе исключение
             } else if (result.type == CellActionResultType.IN_PROCESS_WITH_TELEPORT_ON_SHIP) {
                 newPosition = getPirateShip(pirate).position
@@ -76,11 +81,15 @@ class DefaultGame(
 
     }
 
+    private fun checkGameFinished(): Boolean {
+        TODO()
+    }
+
     private fun kill(pirate: Pirate) {
         nextPlayer.pirateTeam.killPirate(pirate)
     }
 
-    private fun getPirateShip(pirate: Pirate) : ShipCell {
+    private fun getPirateShip(pirate: Pirate): ShipCell {
         return playersAndShips[players[pirate.playerId]]!!
     }
 
