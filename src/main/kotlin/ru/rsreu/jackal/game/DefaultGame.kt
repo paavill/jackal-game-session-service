@@ -38,7 +38,7 @@ class DefaultGame(
         var newPosition = Position(gameAction.x, gameAction.y)
         while (flag) {
             val newCell = field.cells[newPosition.y][newPosition.x]
-            val result = newCell.applyAction(pirate, false)
+            val result = newCell.applyAction(pirate, gameAction.needTakeCoin)
             sequence.add(newCell)
             if (result.type == CellActionResultType.FINISHED) {
                 flag = false
@@ -64,12 +64,6 @@ class DefaultGame(
             counter--
         }
         setNextPlayer()
-        for (cells in field.cells) {
-            for (cell in cells) {
-                println(cell.cellType.toString())
-                println(cell.position.toString())
-            }
-        }
         return GameActionResultFinished(sequence.toList())
     }
 

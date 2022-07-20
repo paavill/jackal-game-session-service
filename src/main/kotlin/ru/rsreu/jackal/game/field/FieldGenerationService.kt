@@ -30,6 +30,13 @@ class FieldGenerationService private constructor(){
                     }
                 }
             }
+            field.forEach { row ->
+                print("[ ")
+                row.forEach { cell ->
+                    print(" | " + cell.cellType + " | ")
+                }
+                println(" ]")
+            }
             return DefaultGameField(field)
         }
     }
