@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component
 import ru.rsreu.jackal.game.Game
 import ru.rsreu.jackal.game.dto.CellResponse
 import ru.rsreu.jackal.game.dto.InitDataResponse
+import ru.rsreu.jackal.game.dto.PirateTeamResponse
+import ru.rsreu.jackal.game.dto.PlayerResponse
 import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.abstracted.RotatedCell
 import ru.rsreu.jackal.game.field.cells.finished.WaterCell
@@ -31,6 +33,25 @@ class GameStateMapper {
                 }
             }
         }
-        return InitDataResponse(game.nextPlayer.id, game.nextPlayer.number, responseCells)
+        val players = game.getPlayersAndShips()
+        val playersResponse = players.map { (player, ships) ->
+            PlayerResponse(
+                player.id,
+                player.number,
+                PirateTeamResponse(
+                    player.pirateTeam.getAll().map { pirate -> pirate.number },
+                    player.pirateTeam.getAllKilled().map { pirate -> pirate.number }),
+                ships.map { ship ->
+                    CellResponse(
+                        ship.cellType,
+                        ship.position,
+                        0,
+                        ship.pirates.map { pirate -> pirate.number },
+                        ship.coinsNumber
+                    )
+                }
+            )
+        }
+        return InitDataResponse(game.nextPlayer.id, game.nextPlayer.number, playersResponse, responseCells)
     }
 }

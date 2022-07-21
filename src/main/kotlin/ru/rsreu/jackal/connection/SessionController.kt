@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller
 import ru.rsreu.jackal.game.GameService
 import ru.rsreu.jackal.game.action.GameAction
 import ru.rsreu.jackal.game.dto.ActionResponse
+import ru.rsreu.jackal.game.dto.ConnectionResponse
 import ru.rsreu.jackal.game.dto.mappers.GameApplyActionMapper
 import ru.rsreu.jackal.game.dto.mappers.GameStateMapper
 
@@ -33,7 +34,7 @@ class SessionController(
         val session = sessionService.getSessionById(id)
         val game = gameService.getGameBySession(session)
         val changedCells = game.applyAction(message)
-        return gameApplyActionMapper.map(game.getPlayersAndShips(), changedCells)
+        return gameApplyActionMapper.map(game.nextPlayer, game.getPlayersAndShips(), changedCells)
     }
 
     @MessageMapping("/init-data/{id}")
@@ -54,7 +55,7 @@ class SessionController(
         )
         simpMessagingTemplate.convertAndSend(
             "/jackal-broker/action-result/$id",
-            "User with id: ${user.id} connected"
+            ConnectionResponse(user.id,"User with id: ${user.id} connected")
         )
     }
 }

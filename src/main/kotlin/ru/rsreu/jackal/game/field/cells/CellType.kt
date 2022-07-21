@@ -1,9 +1,6 @@
 package ru.rsreu.jackal.game.field.cells
 
-import ru.rsreu.jackal.game.field.factories.BallCellFactory
-import ru.rsreu.jackal.game.field.factories.CellFactory
-import ru.rsreu.jackal.game.field.factories.EmptyCellFactory
-import ru.rsreu.jackal.game.field.factories.HorseCellFactory
+import ru.rsreu.jackal.game.field.factories.*
 import ru.rsreu.jackal.game.field.factories.arrows.*
 import ru.rsreu.jackal.game.field.factories.chests.*
 
@@ -20,12 +17,12 @@ enum class CellType(val count: Int, val rotationNumber: Int, val skip: Int, val 
     DIAGONAL_CROSS_SHAPED_ARROW(3, 0, 0, DiagonalCrossShapedArrowCellFactory()),
     DIAGONAL_Y_ARROW(3, 4, 0, DiagonalYArrowCellFactory()),
     HORSE(2, 0, 0, HorseCellFactory()),
-    BARREL(4, 0, 0, EmptyCellFactory()),
+    BARREL(4, 0, 0, BarrelCellFactory()),
     LABYRINTH_WOOD(5, 0, 1, EmptyCellFactory()), //-1 step
     LABYRINTH_SAND(4, 0, 2, EmptyCellFactory()), //-2
     LABYRINTH_JUNGLE(2, 0, 3, EmptyCellFactory()), //-3
     LABYRINTH_ROCKS(1, 0, 4, EmptyCellFactory()),//-4
-    ICE(6, 0, 0, EmptyCellFactory()),
+    ICE(6, 0, 0, IceCellFactory()),
     TRAP(3, 0, 0, EmptyCellFactory()),
     CROCODILE(4, 0, 0, EmptyCellFactory()),
     CANNIBAL(1, 0, 0, EmptyCellFactory()),

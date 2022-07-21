@@ -9,6 +9,7 @@ import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.DefaultGameField
 import ru.rsreu.jackal.game.field.cells.Cell
 import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
+import ru.rsreu.jackal.game.field.cells.finished.HorseCell
 import ru.rsreu.jackal.game.field.cells.finished.ShipCell
 
 class DefaultGame(
@@ -20,9 +21,15 @@ class DefaultGame(
     override var nextPlayer: Player = players.values.first()
         private set
 
-    private var directionVariants: List<Position>? = null
+    private var directionVariants: MutableList<Position> = mutableListOf()
 
     private val piratesSkippingAction = mutableMapOf<Player, Pirate>()
+
+    private val changedCellsSequence = mutableListOf<Cell>()
+
+    private val sequence = mutableListOf<Cell>()
+
+    private var winningCoinsSum = 37 //По правилам
 
     override fun getPlayersAndShips(): Map<Player, List<ShipCell>> {
         return playersAndShips.map { (player, ship) ->
@@ -30,46 +37,81 @@ class DefaultGame(
         }.toMap()
     }
 
+    // TODO: 21.07.2022 ПРОСТО УБЕРИТЕ УЖЕ ЭТОТ IFELSE (есть идейка, но нет времени)
     override fun applyAction(gameAction: GameAction): GameActionResult {
+        changedCellsSequence.clear()
+
         var flag = true
         var counter = 100
-        val sequence = mutableListOf<Cell>()
         playerPirateNumberValidate(nextPlayer, gameAction.pirateNumber)
 
         val pirate = nextPlayer.pirateTeam.getPirateByNumber(gameAction.pirateNumber)!!
+        changedCellsSequence.add(pirate.cell!!)
         sequence.add(pirate.cell!!)
 
+        var substitutionCell: Cell? = null
         var newPosition = Position(gameAction.x, gameAction.y)
-        while (flag) {
-            val newCell = field.cells[newPosition.y][newPosition.x]
+        while (flag && counter > 0) {
+            var newCell = field.cells[newPosition.y][newPosition.x]
+            if (substitutionCell != null) {
+                newCell = substitutionCell
+            }
             val result = newCell.applyAction(pirate, gameAction.needTakeCoin)
-            sequence.add(newCell)
+            if (substitutionCell == null) {
+                changedCellsSequence.add(newCell)
+                sequence.add(newCell)
+            }
+            substitutionCell = null
             if (result.type == CellActionResultType.FINISHED) {
                 flag = false
             } else if (result.type == CellActionResultType.FINISHED_WITH_FIGHT) {
-                sequence.addAll(fight(pirate.playerId, newCell))
+                changedCellsSequence.addAll(fight(pirate.playerId, newCell))
                 flag = false
             } else if (result.type == CellActionResultType.FINISHED_WITH_KILL) {
                 kill(pirate)
                 flag = false
+            } else if (result.type == CellActionResultType.FINISHED_WITH_PIRATE_ACTION_SKIP) {
+                val player = players[pirate.playerId]!!
+                piratesSkippingAction[player] = pirate
+                flag = false
+            } else if (result.type == CellActionResultType.FINISHED_WITH_PIRATE_ACTION_SKIP_AND_FIGHT) {
+                val player = players[pirate.playerId]!!
+                piratesSkippingAction[player] = pirate
+                changedCellsSequence.addAll(fight(pirate.playerId, newCell))
+                flag = false
             } else if (result.type == CellActionResultType.IN_PROCESS) {
                 newPosition = result.position!![0]
                 // TODO: 19.07.2022 Проверка на наличие одного элемента, иначе исключение
+            } else if (result.type == CellActionResultType.IN_PROCESS_REPEAT_ACTION) {
+                val cell = sequence[sequence.size - 2]
+                if (cell is HorseCell) {
+                    substitutionCell = HorseCell(newCell.position)
+                    flag = false
+                } else {
+                    newPosition = newCell.position.add(newCell.position.sub(cell.position))
+                }
             } else if (result.type == CellActionResultType.DIRECTION_QUESTION) {
-                directionVariants = result.position!!
-                return GameActionResultDirectionQuestion(sequence, result.position)
+                directionVariants.addAll(result.position!!)
+                return GameActionResultDirectionQuestion(changedCellsSequence, result.position)
                 // TODO: 19.07.2022 Проверка на наличие листа, иначе исключение
             } else if (result.type == CellActionResultType.IN_PROCESS_WITH_TELEPORT_ON_SHIP) {
                 newPosition = getPirateShip(pirate).position
             } else {
-                if (counter < 0) {
-                    // TODO: 19.07.2022 Исключение зацикливания
-                }
+
+            }
+            if (counter == 1) {
+                // TODO: 19.07.2022 Исключение зацикливания
+                println("Зацикливание")
             }
             counter--
         }
         setNextPlayer()
-        return GameActionResultFinished(sequence.toList())
+        sequence.clear()
+        return GameActionResultFinished(changedCellsSequence.toList())
+    }
+
+    override fun getPiratesSkippingAction(): List<Pirate> {
+        return piratesSkippingAction.values.toList()
     }
 
     private fun setNextPlayer() {
@@ -82,6 +124,10 @@ class DefaultGame(
     }
 
     private fun checkGameFinished(): Boolean {
+        TODO()
+    }
+
+    private fun checkPossibilityToAct(pirate: Pirate, oldCell: Cell) {
         TODO()
     }
 
@@ -102,6 +148,13 @@ class DefaultGame(
                 toShip.add(pirate)
             }
         }
+
+        toShip.forEach { pirate ->
+            if (piratesSkippingAction.values.toList().indexOf(pirate) != -1) {
+                piratesSkippingAction.remove(players[pirate.playerId])
+            }
+        }
+
         //Отправка пиратов на их корабль
         toShip.forEach { pirate ->
             getPirateShip(pirate).applyAction(pirate, false)
@@ -113,7 +166,7 @@ class DefaultGame(
     private fun playerPirateNumberValidate(player: Player, number: Int) {
         if (player.pirateTeam.getPirateByNumber(number) == null) {
             // TODO: 14.07.2022 Исключение: если нет пирата с таким номером
-            println("ошибка: не тот пират")
+            throw Exception("Не тот пират")
         }
     }
 
