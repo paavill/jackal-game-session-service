@@ -1,6 +1,9 @@
 package ru.rsreu.jackal.game.field.cells.abstracted
 
 import ru.rsreu.jackal.game.Position
+import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.FinishedHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.FinishedWithFightHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.field.cells.CoinMoveableCell
 import ru.rsreu.jackal.game.field.cells.PirateMoveableCell
@@ -26,23 +29,23 @@ abstract class StoringPiratesCell(position: Position) : OpenableCell(position), 
         }
     }
 
-    override fun setPirate(pirate: Pirate): CellActionResultType {
+    override fun setPirate(pirate: Pirate): CellActionResultHandlerInitializer {
         pirates.add(pirate)
         if (checkFight(pirate, pirates)) {
-            return CellActionResultType.FINISHED_WITH_FIGHT
+            return FinishedWithFightHandlerInitializer()
         }
-        return CellActionResultType.FINISHED
+        return FinishedHandlerInitializer()
     }
 
-    override fun removePirate(pirate: Pirate): CellActionResultType {
+    override fun removePirate(pirate: Pirate): CellActionResultHandlerInitializer {
         if (pirates.size != 0 && pirates.indexOf(pirate) != -1) {
             pirates.remove(pirate)
         }
         // TODO: 16.07.2022 Исключение нет такого пирата
-        return CellActionResultType.FINISHED
+        return FinishedHandlerInitializer()
     }
 
-    override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResult {
+    override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResultHandlerInitializer {
         // TODO: 14.07.2022 исключение если идет на ту же ячейку
         val old = pirate.move(this)
         old as PirateMoveableCell
@@ -58,7 +61,7 @@ abstract class StoringPiratesCell(position: Position) : OpenableCell(position), 
         }
 
         super.applyAction(pirate, false) //всегда возвратит FINISHED; см. Openable
-        return CellActionResult(actionType, null)
+        return actionType
     }
 
     private fun checkFight(newPirate: Pirate, oldPirates: MutableList<Pirate>): Boolean {
