@@ -8,7 +8,6 @@ import ru.rsreu.jackal.game.field.cells.Cell
 import ru.rsreu.jackal.game.field.cells.finished.HorseCell
 
 class InProcessRepeatActionHandler(
-    private val position: List<Position>,
     private val flag: BooleanWrapper,
     private val newPosition: PositionWrapper,
     private val sequence: List<Cell>,

@@ -1,6 +1,8 @@
 package ru.rsreu.jackal.game.field.cells.finished.arrows
 
 import ru.rsreu.jackal.game.Position
+import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.DirectionQuestionHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.abstracted.RotatedCell
@@ -16,10 +18,10 @@ class DiagonalYArrowCell(position: Position, rotation: Int) : RotatedCell(positi
         Pair(3, listOf(Position(1, 1), Position(0, -1), Position(-1, 0))),
     )
 
-    override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResult {
+    override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResultHandlerInitializer {
         val directions = directions[rotation]!!
         val result =  directions.map { position ->  this.position.add(position) }
         super.applyAction(pirate, needTakeCoins)
-        return CellActionResult(CellActionResultType.DIRECTION_QUESTION, result)
+        return DirectionQuestionHandlerInitializer(result)
     }
 }

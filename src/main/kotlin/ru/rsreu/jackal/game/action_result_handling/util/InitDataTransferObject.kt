@@ -18,5 +18,6 @@ data class InitDataTransferObject(
     val pirate: Pirate,
     val newCell: Cell,
     val substitutionCell: CellWrapper,
-    val newPosition: PositionWrapper
+    val newPosition: PositionWrapper,
+    val winningCoinsSum: IntWrapper,
 )

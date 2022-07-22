@@ -5,10 +5,7 @@ import ru.rsreu.jackal.game.action.GameActionResult
 import ru.rsreu.jackal.game.action.GameActionResultDirectionQuestion
 import ru.rsreu.jackal.game.action.GameActionResultFinished
 import ru.rsreu.jackal.game.action_result_handling.DirectionQuestionHandler
-import ru.rsreu.jackal.game.action_result_handling.util.BooleanWrapper
-import ru.rsreu.jackal.game.action_result_handling.util.CellWrapper
-import ru.rsreu.jackal.game.action_result_handling.util.InitDataTransferObject
-import ru.rsreu.jackal.game.action_result_handling.util.PositionWrapper
+import ru.rsreu.jackal.game.action_result_handling.util.*
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.DefaultGameField
@@ -24,7 +21,7 @@ class DefaultGame(
     override var nextPlayer: Player = players.values.first()
         private set
 
-    private var directionVariants: MutableList<Position> = mutableListOf()
+    private val directionVariants: MutableList<Position> = mutableListOf()
 
     private val piratesSkippingAction = mutableMapOf<Player, Pirate>()
 
@@ -32,7 +29,7 @@ class DefaultGame(
 
     private val sequence = mutableListOf<Cell>()
 
-    private var winningCoinsSum = 37 //По правилам
+    private val winningCoinsSum = IntWrapper(37) //По правилам
 
     override fun getPlayersAndShips(): Map<Player, List<ShipCell>> {
         return playersAndShips.map { (player, ship) ->
@@ -40,32 +37,36 @@ class DefaultGame(
         }.toMap()
     }
 
-    // TODO: 21.07.2022 ПРОСТО УБЕРИТЕ УЖЕ ЭТОТ IFELSE (есть идейка, но нет времени)
     override fun applyAction(gameAction: GameAction): GameActionResult {
+        playerPirateNumberValidateOrThrow(nextPlayer, gameAction.pirateNumber)
+
         changedCellsSequence.clear()
 
-        val flag = BooleanWrapper(true)
         var counter = 100
-        playerPirateNumberValidate(nextPlayer, gameAction.pirateNumber)
-
+        val flag = BooleanWrapper(true)
         val pirate = nextPlayer.pirateTeam.getPirateByNumber(gameAction.pirateNumber)!!
+
         changedCellsSequence.add(pirate.cell!!)
         sequence.add(pirate.cell!!)
 
-        var substitutionCell = CellWrapper(null)
+        val substitutionCell = CellWrapper(null)
         val newPosition = PositionWrapper(Position(gameAction.x, gameAction.y))
         while (flag.boolean && counter > 0) {
             var newCell = field.cells[newPosition.position.y][newPosition.position.x]
+            checkPossibilityToActOrThrow(pirate, newCell)
 
             if (substitutionCell.cell != null) {
                 newCell = substitutionCell.cell!!
             }
+
             val result = newCell.applyAction(pirate, gameAction.needTakeCoin)
+
             if (substitutionCell.cell == null) {
                 changedCellsSequence.add(newCell)
                 sequence.add(newCell)
+            } else {
+                substitutionCell.cell = null
             }
-            substitutionCell.cell = null
 
             val initData = InitDataTransferObject(
                 flag,
@@ -79,18 +80,20 @@ class DefaultGame(
                 pirate,
                 newCell,
                 substitutionCell,
-                newPosition
+                newPosition,
+                winningCoinsSum
             )
+
             val handler = result.init(initData)
+            handler.handle()
             if (handler is DirectionQuestionHandler) {
                 return GameActionResultDirectionQuestion(changedCellsSequence, directionVariants)
             }
-
-            if (counter == 1) {
-                // TODO: 19.07.2022 Исключение зацикливания
-                println("Зацикливание")
-            }
             counter--
+        }
+        if (counter == 0) {
+            // TODO: 19.07.2022 Исключение зацикливания
+            println("Зацикливание")
         }
         setNextPlayer()
         sequence.clear()
@@ -114,11 +117,16 @@ class DefaultGame(
         TODO()
     }
 
-    private fun checkPossibilityToAct(pirate: Pirate, oldCell: Cell) {
-        TODO()
+    private fun checkPossibilityToActOrThrow(pirate: Pirate, newCell: Cell) {
+        val diff = pirate.cell!!.position.sub(newCell.position)
+        val directionVariantIndex = directionVariants.indexOf(newCell.position)
+        if (diff.x + diff.y > 2 && directionVariantIndex == -1 ||
+            directionVariantIndex != -1 && directionVariants[directionVariantIndex] != newCell.position) {
+            throw Exception("Нет возможности так ходить")
+        }
     }
 
-    private fun playerPirateNumberValidate(player: Player, number: Int) {
+    private fun playerPirateNumberValidateOrThrow(player: Player, number: Int) {
         if (player.pirateTeam.getPirateByNumber(number) == null) {
             // TODO: 14.07.2022 Исключение: если нет пирата с таким номером
             throw Exception("Не тот пират")

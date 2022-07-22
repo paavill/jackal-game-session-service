@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import ru.rsreu.jackal.connection.connection_checker.SessionConnectionChecker
 import ru.rsreu.jackal.shared_models.CreateGameSessionResponse
+import javax.validation.Valid
 
 @RestController
 class SessionCreationController(
@@ -16,7 +17,7 @@ class SessionCreationController(
 ) {
     @CrossOrigin
     @PostMapping(value = ["/create-new"], consumes = ["application/json"], produces = ["application/json"])
-    fun createNewSession(@RequestBody sessionCreationRequest: SessionCreationRequest): ResponseEntity<CreateGameSessionResponse> {
+    fun createNewSession(@Valid @RequestBody sessionCreationRequest: SessionCreationRequest): ResponseEntity<CreateGameSessionResponse> {
         val information = sessionService.createNewSession(sessionCreationRequest)
         connectionChecker.addCheckConnectionTask(sessionService.getSessionById(information.sessionId))
         println("Number of sessions: " + sessionService.getSessionsNumber())
