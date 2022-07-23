@@ -26,7 +26,7 @@ class SessionController(
     @SendTo("/jackal-broker/action-result/{id}")
     fun gameActionMessageHandler(
         @DestinationVariable("id") id: String,
-        @Valid @Payload message: GameAction,
+        /*@Valid*/ @Payload message: GameAction,
         principal: PreAuthenticatedAuthenticationToken
     ): ActionResponse {
         sessionService.validateOrThrow(principal)
