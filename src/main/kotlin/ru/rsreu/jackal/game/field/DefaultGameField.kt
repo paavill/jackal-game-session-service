@@ -23,7 +23,7 @@ class DefaultGameField(cells: List<List<Cell>>) : Field {
             run {
                 cells.forEachIndexed { x, cell ->
                     run {
-                        if (cell is WaterCell && (x == 8 || y == 8)) {
+                        if (cell is WaterCell && (x == 6 || y == 6)) {
                             if (playerIndex < players.size) {
                                 cell.ship = ShipCell(players[playerIndex], cell.position.copy(), cell)
                                 ships[players[playerIndex]] = (cell.ship!!)

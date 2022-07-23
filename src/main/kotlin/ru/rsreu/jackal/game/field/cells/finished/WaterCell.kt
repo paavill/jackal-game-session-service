@@ -9,7 +9,7 @@ import ru.rsreu.jackal.game.field.cells.AbleSendToWater
 import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.abstracted.KillAbleByFightCell
 
-class WaterCell(position: Position) : KillAbleByFightCell(position) {
+class WaterCell(position: Position) : KillAbleByFightCell(position), AbleSendToWater{
     override val cellType: CellType = CellType.WATER
     override var isClose: Boolean = false
     var ship: ShipCell? = null

@@ -33,7 +33,7 @@ class FieldGenerationService private constructor(){
             field.forEach { row ->
                 print("[ ")
                 row.forEach { cell ->
-                    print(" | " + cell.cellType + " | ")
+                    print(" | " + String.format("%35s", cell.cellType.toString() + " " + cell.position.toString()) + " | ")
                 }
                 println(" ]")
             }

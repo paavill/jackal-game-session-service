@@ -14,9 +14,9 @@ class DiagonalOneWayArrowCell(position: Position, rotation: Int) : RotatedCell(p
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResultHandlerInitializer {
         val result = when (rotation) {
             0 -> this.position.sub(Position(1, 1))
-            1 -> this.position.add(Position(1, 1))
+            1 -> this.position.add(Position(1, -1))
             2 -> this.position.add(Position(1, 1))
-            3 -> this.position.sub(Position(1, 1))
+            3 -> this.position.sub(Position(1, -1))
             else -> Position(0, 0)
         }
         super.applyAction(pirate, needTakeCoins)

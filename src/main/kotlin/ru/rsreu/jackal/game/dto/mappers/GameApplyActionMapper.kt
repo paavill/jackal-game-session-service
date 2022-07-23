@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component
 import ru.rsreu.jackal.game.action.GameActionResult
 import ru.rsreu.jackal.game.action.GameActionResultDirectionQuestion
 import ru.rsreu.jackal.game.action.GameActionResultFinished
+import ru.rsreu.jackal.game.action.GameActionResultWithAbleToAct
 import ru.rsreu.jackal.game.dto.*
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.cells.abstracted.RotatedCell
@@ -73,6 +74,14 @@ class GameApplyActionMapper {
                     playersResponse,
                     changedCellsResponse,
                     gameActionResult.directions
+                )
+            }
+            is GameActionResultWithAbleToAct -> {
+                ActionResponseFinishedWithAbleToAct(
+                    nextPlayer.id,
+                    nextPlayer.number,
+                    playersResponse,
+                    changedCellsResponse
                 )
             }
             else -> {

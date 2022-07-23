@@ -5,6 +5,7 @@ import ru.rsreu.jackal.game.action.GameActionResult
 import ru.rsreu.jackal.game.action.GameActionResultDirectionQuestion
 import ru.rsreu.jackal.game.action.GameActionResultFinished
 import ru.rsreu.jackal.game.action_result_handling.DirectionQuestionHandler
+import ru.rsreu.jackal.game.action_result_handling.finished.FinishedWithAbleToActHandler
 import ru.rsreu.jackal.game.action_result_handling.util.*
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
@@ -42,7 +43,6 @@ class DefaultGame(
         playerPirateNumberValidateOrThrow(nextPlayer, gameAction.pirateNumber)
 
         changedCellsSequence.clear()
-        directionVariants.clear()
 
         var counter = 100
         val flag = BooleanWrapper(true)
@@ -90,6 +90,8 @@ class DefaultGame(
             handler.handle()
             if (handler is DirectionQuestionHandler) {
                 return GameActionResultDirectionQuestion(changedCellsSequence, directionVariants)
+            } else if (handler is FinishedWithAbleToActHandler) {
+                return GameActionResultFinished(changedCellsSequence)
             }
             counter--
         }
@@ -123,6 +125,9 @@ class DefaultGame(
     private fun checkPossibilityToActOrThrow(pirate: Pirate, newCell: Cell) {
         val diff = pirate.cell!!.position.sub(newCell.position)
         val directionVariantIndex = directionVariants.indexOf(newCell.position)
+        if (directionVariants.size > 0) {
+            directionVariants.clear()
+        }
         if ((diff.x.absoluteValue > 1 || diff.y.absoluteValue > 1) && directionVariantIndex == -1 ||
             newCell.position.x == 0 && newCell.position.y == 0 ||
             newCell.position.x == 12 && newCell.position.y == 12 ||
