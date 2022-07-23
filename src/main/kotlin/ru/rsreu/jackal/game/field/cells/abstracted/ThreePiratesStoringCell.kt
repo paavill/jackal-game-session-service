@@ -1,16 +1,18 @@
 package ru.rsreu.jackal.game.field.cells.abstracted
 
 import ru.rsreu.jackal.game.Position
+import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.FinishedHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 
 abstract class ThreePiratesStoringCell(position: Position) : StoringPiratesCell(position) {
-    override fun setPirate(pirate: Pirate): CellActionResultType {
+    override fun setPirate(pirate: Pirate): CellActionResultHandlerInitializer {
         if (pirates.size < 3) {
             return super.setPirate(pirate)
         }
         // TODO: 16.07.2022 Ичключение если слишком много пиратов
-        return CellActionResultType.FINISHED
+        return FinishedHandlerInitializer()
     }
 
     protected fun setAll(list: List<Pirate>) {

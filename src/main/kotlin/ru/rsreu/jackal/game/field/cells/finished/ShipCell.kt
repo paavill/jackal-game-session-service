@@ -2,6 +2,8 @@ package ru.rsreu.jackal.game.field.cells.finished
 
 import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 import ru.rsreu.jackal.game.Position
+import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.FinishedWithKillHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.cells.CellType
@@ -18,11 +20,11 @@ class ShipCell(private val player: Player, position: Position, private var water
         //Должен быть пустым, чтобы нельзя было уносить монеты с корабля
     }
 
-    override fun setPirate(pirate: Pirate): CellActionResultType {
+    override fun setPirate(pirate: Pirate): CellActionResultHandlerInitializer {
         val result = super.setPirate(pirate)
         if (!player.pirateTeam.isPirateIn(pirate)) {
             super.removePirate(pirate)
-            return CellActionResultType.FINISHED_WITH_KILL
+            return FinishedWithKillHandlerInitializer()
         }
         return result
     }

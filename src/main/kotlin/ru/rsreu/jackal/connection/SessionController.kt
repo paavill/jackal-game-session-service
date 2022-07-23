@@ -1,18 +1,17 @@
 package ru.rsreu.jackal.connection
 
 import org.springframework.messaging.Message
-import org.springframework.messaging.handler.annotation.DestinationVariable
-import org.springframework.messaging.handler.annotation.MessageMapping
-import org.springframework.messaging.handler.annotation.Payload
-import org.springframework.messaging.handler.annotation.SendTo
+import org.springframework.messaging.handler.annotation.*
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.stereotype.Controller
 import ru.rsreu.jackal.game.GameService
 import ru.rsreu.jackal.game.action.GameAction
 import ru.rsreu.jackal.game.dto.ActionResponse
+import ru.rsreu.jackal.game.dto.ConnectionResponse
 import ru.rsreu.jackal.game.dto.mappers.GameApplyActionMapper
 import ru.rsreu.jackal.game.dto.mappers.GameStateMapper
+import javax.validation.Valid
 
 @Controller
 class SessionController(
@@ -26,14 +25,14 @@ class SessionController(
     @SendTo("/jackal-broker/action-result/{id}")
     fun gameActionMessageHandler(
         @DestinationVariable("id") id: String,
-        @Payload message: GameAction,
+        @Valid @Payload message: GameAction,
         principal: PreAuthenticatedAuthenticationToken
     ): ActionResponse {
         sessionService.validateOrThrow(principal)
         val session = sessionService.getSessionById(id)
         val game = gameService.getGameBySession(session)
         val changedCells = game.applyAction(message)
-        return gameApplyActionMapper.map(game.getPlayersAndShips(), changedCells)
+        return gameApplyActionMapper.map(game.nextPlayer, game.getPlayersAndShips(), changedCells)
     }
 
     @MessageMapping("/init-data/{id}")
@@ -54,7 +53,17 @@ class SessionController(
         )
         simpMessagingTemplate.convertAndSend(
             "/jackal-broker/action-result/$id",
-            "User with id: ${user.id} connected"
+            ConnectionResponse(user.id, "User with id: ${user.id} connected")
+        )
+    }
+
+    @MessageExceptionHandler(value = [Throwable::class])
+    fun exceptionHandler(principal: PreAuthenticatedAuthenticationToken, e: Exception) {
+        val userId = principal.principal.toString().toLong()
+        val sessionId = principal.credentials.toString()
+        simpMessagingTemplate.convertAndSendToUser(
+            userId.toString(),
+            "/jackal-broker/action-result/$sessionId", e.message
         )
     }
 }
