@@ -11,7 +11,7 @@ abstract class FightableHandler(
     private val playersAndShips: Map<Player, ShipCell>,
     private val flag: BooleanWrapper,
     private val changedCellsSequence: MutableList<Cell>,
-    private val piratesSkippingAction: MutableMap<Player, Pirate>,
+    private val piratesSkippingAction: MutableMap<Pirate, Int>,
     private val pirate: Pirate,
     private val newCell: Cell,
 ) : ActionResultHandler {
@@ -32,8 +32,8 @@ abstract class FightableHandler(
         }
 
         toShip.forEach { pirate ->
-            if (piratesSkippingAction.values.toList().indexOf(pirate) != -1) {
-                piratesSkippingAction.remove(players[pirate.playerId])
+            if (piratesSkippingAction.keys.toList().indexOf(pirate) != -1) {
+                piratesSkippingAction.remove(pirate)
             }
         }
 

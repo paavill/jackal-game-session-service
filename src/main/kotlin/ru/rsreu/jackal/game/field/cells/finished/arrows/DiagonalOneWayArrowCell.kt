@@ -2,12 +2,10 @@ package ru.rsreu.jackal.game.field.cells.finished.arrows
 
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandlerInitializer
-import ru.rsreu.jackal.game.action_result_handling.initers.InProcessHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.in_process.InProcessHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.abstracted.RotatedCell
-import ru.rsreu.jackal.game.field.cells.action.CellActionResult
-import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 
 class DiagonalOneWayArrowCell(position: Position, rotation: Int) : RotatedCell(position, rotation) {
     override val cellType: CellType = CellType.DIAGONAL_ONE_WAY_ARROW

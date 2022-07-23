@@ -10,7 +10,7 @@ data class InitDataTransferObject(
     val flag: BooleanWrapper,
     val players: Map<Long, Player>,
     val playersAndShips: Map<Player, ShipCell>,
-    val piratesSkippingAction: MutableMap<Player, Pirate>,
+    val piratesSkippingAction: MutableMap<Pirate, Int>,
     val changedCellsSequence: MutableList<Cell>,
     val directionVariants: MutableList<Position>,
     val sequence: List<Cell>,

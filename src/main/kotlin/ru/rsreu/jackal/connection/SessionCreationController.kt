@@ -17,7 +17,7 @@ class SessionCreationController(
 ) {
     @CrossOrigin
     @PostMapping(value = ["/create-new"], consumes = ["application/json"], produces = ["application/json"])
-    fun createNewSession(@Valid @RequestBody sessionCreationRequest: SessionCreationRequest): ResponseEntity<CreateGameSessionResponse> {
+    fun createNewSession(/*@Valid*/ @RequestBody sessionCreationRequest: SessionCreationRequest): ResponseEntity<CreateGameSessionResponse> {
         val information = sessionService.createNewSession(sessionCreationRequest)
         connectionChecker.addCheckConnectionTask(sessionService.getSessionById(information))
         println("Number of sessions: " + sessionService.getSessionsNumber())

@@ -1,9 +1,8 @@
 package ru.rsreu.jackal.game.field.cells.finished
 
-import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandlerInitializer
-import ru.rsreu.jackal.game.action_result_handling.initers.FinishedWithKillHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedWithKillHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.cells.CellType

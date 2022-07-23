@@ -23,7 +23,7 @@ class DefaultGame(
 
     private val directionVariants: MutableList<Position> = mutableListOf()
 
-    private val piratesSkippingAction = mutableMapOf<Player, Pirate>()
+    private val piratesSkippingAction = mutableMapOf<Pirate, Int>()
 
     private val changedCellsSequence = mutableListOf<Cell>()
 
@@ -101,7 +101,7 @@ class DefaultGame(
     }
 
     override fun getPiratesSkippingAction(): List<Pirate> {
-        return piratesSkippingAction.values.toList()
+        return piratesSkippingAction.keys.toList()
     }
 
     private fun setNextPlayer() {
@@ -117,19 +117,23 @@ class DefaultGame(
         TODO()
     }
 
+    // TODO: 23.07.2022 Не привязываться к размерам поля для гибкости класса 
     private fun checkPossibilityToActOrThrow(pirate: Pirate, newCell: Cell) {
         val diff = pirate.cell!!.position.sub(newCell.position)
         val directionVariantIndex = directionVariants.indexOf(newCell.position)
         if (diff.x + diff.y > 2 && directionVariantIndex == -1 ||
-            directionVariantIndex != -1 && directionVariants[directionVariantIndex] != newCell.position) {
+            directionVariantIndex != -1 && directionVariants[directionVariantIndex] != newCell.position ||
+            newCell.position.x == 0 && newCell.position.y == 0 ||
+            newCell.position.x == 12 && newCell.position.y == 12 ||
+            newCell.position.x == 12 && newCell.position.y == 0 ||
+            newCell.position.x == 0 && newCell.position.y == 12) {
             throw Exception("Нет возможности так ходить")
         }
     }
 
     private fun playerPirateNumberValidateOrThrow(player: Player, number: Int) {
         if (player.pirateTeam.getPirateByNumber(number) == null) {
-            // TODO: 14.07.2022 Исключение: если нет пирата с таким номером
-            throw Exception("Не тот пират")
+            throw Exception("Нет пиратов с таким номером")
         }
     }
 

@@ -23,8 +23,8 @@ enum class CellType(val count: Int, val rotationNumber: Int, val skip: Int, val 
     LABYRINTH_JUNGLE(2, 0, 3, EmptyCellFactory()), //-3
     LABYRINTH_ROCKS(1, 0, 4, EmptyCellFactory()),//-4
     ICE(6, 0, 0, IceCellFactory()),
-    TRAP(3, 0, 0, EmptyCellFactory()),
-    CROCODILE(4, 0, 0, EmptyCellFactory()),
+    TRAP(3, 0, 0, TrapCellFactory()),
+    CROCODILE(4, 0, 0, CrocodileCellFactory()),
     CANNIBAL(1, 0, 0, EmptyCellFactory()),
     FORTRESS(2, 0, 0, EmptyCellFactory()),
     NATIVE(1, 0, 0, EmptyCellFactory()),

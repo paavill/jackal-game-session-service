@@ -1,6 +1,6 @@
-package ru.rsreu.jackal.game.action_result_handling
+package ru.rsreu.jackal.game.action_result_handling.in_process
 
-import ru.rsreu.jackal.game.Position
+import ru.rsreu.jackal.game.action_result_handling.ActionResultHandler
 import ru.rsreu.jackal.game.action_result_handling.util.BooleanWrapper
 import ru.rsreu.jackal.game.action_result_handling.util.CellWrapper
 import ru.rsreu.jackal.game.action_result_handling.util.PositionWrapper
