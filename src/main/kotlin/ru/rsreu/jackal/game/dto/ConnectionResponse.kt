@@ -5,5 +5,5 @@ data class ConnectionResponse(
     val playerId: Long,
     val message: String
 ) {
-    val type: ActionResponseType = ActionResponseType.INIT_INFORMATION
+    val type: ActionResponseType = ActionResponseType.CONNECTION_INFO
 }

@@ -9,6 +9,7 @@ import ru.rsreu.jackal.game.GameService
 import ru.rsreu.jackal.game.action.GameAction
 import ru.rsreu.jackal.game.dto.ActionResponse
 import ru.rsreu.jackal.game.dto.ConnectionResponse
+import ru.rsreu.jackal.game.dto.ErrorResponse
 import ru.rsreu.jackal.game.dto.mappers.GameApplyActionMapper
 import ru.rsreu.jackal.game.dto.mappers.GameStateMapper
 import javax.validation.Valid
@@ -63,7 +64,7 @@ class SessionController(
         val sessionId = principal.credentials.toString()
         simpMessagingTemplate.convertAndSendToUser(
             userId.toString(),
-            "/jackal-broker/action-result/$sessionId", e.message
+            "/jackal-broker/action-result/$sessionId", ErrorResponse(e.message ?: "")
         )
     }
 }
