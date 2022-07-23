@@ -10,6 +10,8 @@ import ru.rsreu.jackal.game.field.cells.abstracted.ThreePiratesStoringCell
 
 class ShipCell(private val player: Player, position: Position, water: WaterCell) : ThreePiratesStoringCell(position) {
     override val cellType: CellType = CellType.SHIP
+    override var position: Position = position
+        private set
     var water = water
         private set
 
@@ -33,7 +35,7 @@ class ShipCell(private val player: Player, position: Position, water: WaterCell)
     fun move(newWater: WaterCell): WaterCell {
         val old = this.water
         this.water = newWater
-        this.position.add(newWater.position.sub(this.position))
+        this.position = newWater.position
         return old
     }
 }

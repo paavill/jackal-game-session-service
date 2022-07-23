@@ -7,12 +7,15 @@ import ru.rsreu.jackal.game.action.GameActionResultFinished
 import ru.rsreu.jackal.game.action_result_handling.DirectionQuestionHandler
 import ru.rsreu.jackal.game.action_result_handling.finished.FinishedWithAbleToActHandler
 import ru.rsreu.jackal.game.action_result_handling.in_process.InProcess
+import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedWithKillHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedWithPirateSaveHandlerInitializer
 import ru.rsreu.jackal.game.action_result_handling.util.*
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.DefaultGameField
 import ru.rsreu.jackal.game.field.cells.Cell
 import ru.rsreu.jackal.game.field.cells.finished.ShipCell
+import ru.rsreu.jackal.game.field.cells.finished.WaterCell
 import kotlin.math.absoluteValue
 
 class DefaultGame(
@@ -59,13 +62,22 @@ class DefaultGame(
             forDirectionChoicePirate = null
         }
 
-        changedCellsSequence.add(pirate.cell!!)
-        sequenceStopped.add(pirate.cell!!)
-
         val substitutionCell = CellWrapper(null)
         val newPosition = PositionWrapper(Position(gameAction.x, gameAction.y))
+        if (pirate.cell!! is ShipCell && field.cells[newPosition.position.y][newPosition.position.x] is WaterCell) {
+            val ship = pirate.cell!! as ShipCell
+            changedCellsSequence.add(ship.water)
+            sequenceStopped.add(ship.water)
+        } else {
+            changedCellsSequence.add(pirate.cell!!)
+            sequenceStopped.add(pirate.cell!!)
+        }
+
+
+        updateSkipping()
         while (flag.boolean && counter > 0) {
             var newCell = field.cells[newPosition.position.y][newPosition.position.x]
+
             if (needToValidate) {
                 checkPossibilityToActOrThrow(pirate, newCell)
             } else {
@@ -103,6 +115,7 @@ class DefaultGame(
 
             val handler = result.init(initData)
             handler.handle()
+
             if (handler is DirectionQuestionHandler) {
                 forDirectionChoicePirate = pirate // TODO: 23.07.2022 Убрать в хендер 
                 return GameActionResultDirectionQuestion(changedCellsSequence, directionVariants)
@@ -112,12 +125,14 @@ class DefaultGame(
                 // TODO: 23.07.2022 Убрать внутрь хендлера
                 needToValidate = false
             }
+
+            if (counter == 50) {
+                val handlerInit = FinishedWithKillHandlerInitializer()
+                handlerInit.init(initData).handle()
+            }
             counter--
         }
-        if (counter == 0) {
-            // TODO: 19.07.2022 Исключение зацикливания
-            println("Зацикливание")
-        }
+
         setNextPlayer()
         sequenceStopped.clear()
         return GameActionResultFinished(changedCellsSequence.toList())
@@ -165,8 +180,8 @@ class DefaultGame(
         if (directionVariants.size > 0) {
             directionVariants.clear()
         }
-        if ((diff.x.absoluteValue > 1 || diff.y.absoluteValue > 1) && directionVariantIndex == -1 ||
-            directionVariantIndex != -1 && newCell.position != temp[directionVariantIndex] ||
+        if ((diff.x.absoluteValue > 1 || diff.y.absoluteValue > 1) && temp.isEmpty() ||
+            directionVariantIndex == -1 && temp.isNotEmpty() ||
             newCell.position.x == 0 && newCell.position.y == 0 ||
             newCell.position.x == 12 && newCell.position.y == 12 ||
             newCell.position.x == 12 && newCell.position.y == 0 ||

@@ -44,7 +44,7 @@ abstract class StoringPiratesCell(position: Position) : OpenableCell(position), 
     }
 
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResultHandlerInitializer {
-        // TODO: 14.07.2022 исключение если идет на ту же ячейку
+
         val old = pirate.move(this)
         old as PirateMoveableCell
         old as CoinMoveableCell

@@ -8,6 +8,6 @@ import ru.rsreu.jackal.game.entities.Pirate
 
 class FinishedWithPirateSaveHandlerInitializer(private val savedPirate: Pirate) : CellActionResultHandlerInitializer {
     override fun init(initData: InitDataTransferObject): ActionResultHandler {
-        return FinishedWithPirateSaveHandler(initData.piratesSkippingAction, savedPirate)
+        return FinishedWithPirateSaveHandler(initData.flag, initData.piratesSkippingAction, savedPirate)
     }
 }

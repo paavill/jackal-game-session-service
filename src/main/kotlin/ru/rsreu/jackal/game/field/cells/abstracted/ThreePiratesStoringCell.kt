@@ -10,7 +10,6 @@ abstract class ThreePiratesStoringCell(position: Position) : StoringPiratesCell(
         if (pirates.size < 3) {
             return super.setPirate(pirate)
         }
-        // TODO: 16.07.2022 Ичключение если слишком много пиратов
         return FinishedHandlerInitializer()
     }
 

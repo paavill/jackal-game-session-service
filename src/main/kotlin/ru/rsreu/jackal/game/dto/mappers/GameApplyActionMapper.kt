@@ -44,9 +44,6 @@ class GameApplyActionMapper {
                 CellResponse(ship.cellType, cell.position, 0, ship.pirates.map { pirate ->
                     pirate.number
                 }, cell.coinsNumber)
-            } else if (cell is ShipCell && cell.position != cell.water.position) {
-                val returnedCell = cell.water
-                CellResponse(returnedCell.cellType, returnedCell.position, 0, listOf(), returnedCell.coinsNumber)
             } else if (cell is RotatedCell) {
                 CellResponse(cell.cellType, cell.position, cell.rotation, cell.pirates.map { pirate ->
                     pirate.number
