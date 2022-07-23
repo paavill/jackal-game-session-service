@@ -9,14 +9,26 @@ import java.util.*
 class SessionService(val jwtProvider: JwtProvider) {
     private val sessions: HashMap<String, Session> = HashMap()
 
-    fun createNewSession(request: SessionCreationRequest): SessionCreationInformation {
+    fun createNewSession(request: SessionCreationRequest): String {
         val uuid = UUID.randomUUID()
         val users = request.usersIds.associateWith { id -> User(id) }
         sessions[uuid.toString()] = Session(uuid.toString(), request.lobbyId, request.gameMode, users)
-        val userIdAndJwtMap = users.map { (id, user) ->
-            id to jwtProvider.getJwt(user, sessions[uuid.toString()]!!)
-        }.toMap()
-        return SessionCreationInformation(uuid.toString(), userIdAndJwtMap)
+        return uuid.toString()
+    }
+
+    fun getUserSessionOrThrow(userId: Long): Session {
+        val session = sessions.values.find { session -> session.isUserPresence(userId) }
+        if (session != null) {
+            return session
+        }
+        throw Exception("Нет ни пользователя ни сессии сотвественно")
+    }
+
+    fun getReconnectInfoByUserId(userId: Long): ReconnectionInformation {
+        val session = getUserSessionOrThrow(userId)
+        val user = session.getUserByIdOrThrow(userId)
+        val jwt = jwtProvider.getJwt(user, session)
+        return ReconnectionInformation(user.id, session.id, jwt)
     }
 
     fun getSessionById(id: String): Session = sessions[id]!!
