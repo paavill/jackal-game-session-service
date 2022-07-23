@@ -11,7 +11,10 @@ class CrocodileCell(position: Position) : ZeroPirateStoringCell(position) {
     override val cellType: CellType = CellType.CROCODILE
 
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResultHandlerInitializer {
-        super.applyAction(pirate, needTakeCoins)
+        val result = super.applyAction(pirate, needTakeCoins)
+        if (isClose) {
+            return result
+        }
         return FinishedWithAbleToActHandlerInitializer()
     }
 }

@@ -11,7 +11,7 @@ class InProcessWithTeleportOnShipHandler(
     private val players: Map<Long, Player>,
     private val playersAndShips: Map<Player, ShipCell>,
     private val pirate: Pirate
-) : ActionResultHandler {
+) : ActionResultHandler, InProcess {
     override fun handle() {
         newPosition.position = getPirateShip(pirate).position
     }

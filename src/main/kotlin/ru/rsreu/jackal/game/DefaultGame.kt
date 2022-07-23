@@ -6,6 +6,7 @@ import ru.rsreu.jackal.game.action.GameActionResultDirectionQuestion
 import ru.rsreu.jackal.game.action.GameActionResultFinished
 import ru.rsreu.jackal.game.action_result_handling.DirectionQuestionHandler
 import ru.rsreu.jackal.game.action_result_handling.finished.FinishedWithAbleToActHandler
+import ru.rsreu.jackal.game.action_result_handling.in_process.InProcess
 import ru.rsreu.jackal.game.action_result_handling.util.*
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
@@ -24,6 +25,8 @@ class DefaultGame(
         private set
 
     private val directionVariants: MutableList<Position> = mutableListOf()
+
+    private var forDirectionChoicePirate: Pirate? = null
 
     private val piratesSkippingAction = mutableMapOf<Pirate, Int>()
 
@@ -46,7 +49,15 @@ class DefaultGame(
 
         var counter = 100
         val flag = BooleanWrapper(true)
+        var needToValidate = true
         val pirate = nextPlayer.pirateTeam.getPirateByNumber(gameAction.pirateNumber)!!
+
+        // TODO: 23.07.2022 Сделать подругому 
+        if (forDirectionChoicePirate != null && pirate != forDirectionChoicePirate) {
+            throw Exception("Ходите пиратом, перед которым стоит выбор")
+        } else {
+            forDirectionChoicePirate = null
+        }
 
         changedCellsSequence.add(pirate.cell!!)
         sequenceStopped.add(pirate.cell!!)
@@ -55,7 +66,11 @@ class DefaultGame(
         val newPosition = PositionWrapper(Position(gameAction.x, gameAction.y))
         while (flag.boolean && counter > 0) {
             var newCell = field.cells[newPosition.position.y][newPosition.position.x]
-            checkPossibilityToActOrThrow(pirate, newCell)
+            if (needToValidate) {
+                checkPossibilityToActOrThrow(pirate, newCell)
+            } else {
+                needToValidate = true
+            }
 
             if (substitutionCell.cell != null) {
                 newCell = substitutionCell.cell!!
@@ -89,9 +104,13 @@ class DefaultGame(
             val handler = result.init(initData)
             handler.handle()
             if (handler is DirectionQuestionHandler) {
+                forDirectionChoicePirate = pirate // TODO: 23.07.2022 Убрать в хендер 
                 return GameActionResultDirectionQuestion(changedCellsSequence, directionVariants)
             } else if (handler is FinishedWithAbleToActHandler) {
                 return GameActionResultFinished(changedCellsSequence)
+            } else if (handler is InProcess) {
+                // TODO: 23.07.2022 Убрать внутрь хендлера
+                needToValidate = false
             }
             counter--
         }
@@ -121,14 +140,33 @@ class DefaultGame(
         TODO()
     }
 
+    private fun updateSkipping() {
+        val toClear = mutableListOf<Pirate>()
+        piratesSkippingAction.forEach{(pirate, number) ->
+            if (number == 0) {
+                toClear.add(pirate)
+            }
+        }
+        toClear.forEach { pirate ->
+            piratesSkippingAction.remove(pirate)
+        }
+        for (mutableEntry in piratesSkippingAction) {
+            if (mutableEntry.value > 0) {
+                mutableEntry.setValue(mutableEntry.value - 1)
+            }
+        }
+    }
+
     // TODO: 23.07.2022 Не привязываться к размерам поля для гибкости класса 
     private fun checkPossibilityToActOrThrow(pirate: Pirate, newCell: Cell) {
         val diff = pirate.cell!!.position.sub(newCell.position)
         val directionVariantIndex = directionVariants.indexOf(newCell.position)
+        val temp = directionVariants.map { e -> e }
         if (directionVariants.size > 0) {
             directionVariants.clear()
         }
         if ((diff.x.absoluteValue > 1 || diff.y.absoluteValue > 1) && directionVariantIndex == -1 ||
+            directionVariantIndex != -1 && newCell.position != temp[directionVariantIndex] ||
             newCell.position.x == 0 && newCell.position.y == 0 ||
             newCell.position.x == 12 && newCell.position.y == 12 ||
             newCell.position.x == 12 && newCell.position.y == 0 ||
@@ -136,6 +174,10 @@ class DefaultGame(
             newCell.position == pirate.cell!!.position
         ) {
             throw Exception("Нет возможности так ходить")
+        }
+
+        if (piratesSkippingAction[pirate] != null) {
+            throw Exception("Пират спит, дай ему отдохнуть")
         }
     }
 

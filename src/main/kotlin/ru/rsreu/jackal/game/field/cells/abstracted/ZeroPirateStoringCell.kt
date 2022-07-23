@@ -7,6 +7,9 @@ import ru.rsreu.jackal.game.entities.Pirate
 
 abstract class ZeroPirateStoringCell(position: Position) : StoringPiratesCell(position) {
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResultHandlerInitializer {
+        if (isClose) {
+            isClose = false
+        }
         return FinishedHandlerInitializer()
     }
 }

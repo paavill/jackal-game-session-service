@@ -8,7 +8,7 @@ class InProcessHandler(
     private val position: Position,
     private val newPosition: PositionWrapper
 ) :
-    ActionResultHandler {
+    ActionResultHandler, InProcess {
     override fun handle() {
         newPosition.position = position
     }

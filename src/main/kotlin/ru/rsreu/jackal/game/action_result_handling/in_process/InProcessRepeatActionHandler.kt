@@ -14,7 +14,7 @@ class InProcessRepeatActionHandler(
     private val newCell: Cell,
     private val substitutionCell: CellWrapper
 ) :
-    ActionResultHandler {
+    ActionResultHandler, InProcess {
     override fun handle() {
         val cell = sequence[sequence.size - 2]
         if (cell is HorseCell) {

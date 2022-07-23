@@ -33,6 +33,7 @@ class ShipCell(private val player: Player, position: Position, water: WaterCell)
     fun move(newWater: WaterCell): WaterCell {
         val old = this.water
         this.water = newWater
+        this.position.add(newWater.position.sub(this.position))
         return old
     }
 }
