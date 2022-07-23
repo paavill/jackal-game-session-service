@@ -8,8 +8,10 @@ import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.abstracted.ThreePiratesStoringCell
 
-class ShipCell(private val player: Player, position: Position, private var water: WaterCell) : ThreePiratesStoringCell(position) {
+class ShipCell(private val player: Player, position: Position, water: WaterCell) : ThreePiratesStoringCell(position) {
     override val cellType: CellType = CellType.SHIP
+    var water = water
+        private set
 
     init {
         this.setAll(player.pirateTeam.getAll())

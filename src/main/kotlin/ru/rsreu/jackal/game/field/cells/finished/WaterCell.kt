@@ -5,6 +5,7 @@ import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandl
 import ru.rsreu.jackal.game.action_result_handling.initers.FinishedCoinLossHandlerInitializer
 import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
+import ru.rsreu.jackal.game.field.cells.AbleSendToWater
 import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.abstracted.KillAbleByFightCell
 
@@ -15,6 +16,9 @@ class WaterCell(position: Position) : KillAbleByFightCell(position) {
 
     override fun setCoin() {
         //Необходимо для отсутсвия функционала установки монеты
+        if (ship != null) {
+            super.setCoin()
+        }
     }
 
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResultHandlerInitializer {
@@ -25,7 +29,8 @@ class WaterCell(position: Position) : KillAbleByFightCell(position) {
             this.ship = current
         } else if (this.ship != null) {
             return this.ship!!.applyAction(pirate, needTakeCoins)
-        } else if (current !is EmptyCell) {
+            // TODO: 23.07.2022 Сделать абстрактный класс для стрелок чтобы уменьшить if
+        } else if (current is AbleSendToWater) {
             // TODO: 17.07.2022 Надо определить с каких ячеек пират не может ходить на воду
             return super.applyAction(pirate, needTakeCoins)
         }
