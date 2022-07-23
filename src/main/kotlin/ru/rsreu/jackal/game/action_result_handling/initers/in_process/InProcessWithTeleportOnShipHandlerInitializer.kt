@@ -1,7 +1,8 @@
-package ru.rsreu.jackal.game.action_result_handling.initers
+package ru.rsreu.jackal.game.action_result_handling.initers.in_process
 
 import ru.rsreu.jackal.game.action_result_handling.ActionResultHandler
-import ru.rsreu.jackal.game.action_result_handling.InProcessWithTeleportOnShipHandler
+import ru.rsreu.jackal.game.action_result_handling.in_process.InProcessWithTeleportOnShipHandler
+import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandlerInitializer
 import ru.rsreu.jackal.game.action_result_handling.util.InitDataTransferObject
 
 class InProcessWithTeleportOnShipHandlerInitializer : CellActionResultHandlerInitializer {

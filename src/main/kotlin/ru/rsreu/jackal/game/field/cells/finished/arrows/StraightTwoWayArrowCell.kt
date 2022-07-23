@@ -4,10 +4,11 @@ import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandlerInitializer
 import ru.rsreu.jackal.game.action_result_handling.initers.DirectionQuestionHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
+import ru.rsreu.jackal.game.field.cells.AbleSendToWater
 import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.abstracted.RotatedCell
 
-class StraightTwoWayArrowCell(position: Position, rotation: Int) : RotatedCell(position, rotation) {
+class StraightTwoWayArrowCell(position: Position, rotation: Int) : RotatedCell(position, rotation), AbleSendToWater {
     override val cellType: CellType = CellType.STRAIGHT_TWO_WAY_ARROW
 
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResultHandlerInitializer {

@@ -11,6 +11,7 @@ import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.DefaultGameField
 import ru.rsreu.jackal.game.field.cells.Cell
 import ru.rsreu.jackal.game.field.cells.finished.ShipCell
+import kotlin.math.absoluteValue
 
 class DefaultGame(
     private val players: Map<Long, Player>,
@@ -23,11 +24,11 @@ class DefaultGame(
 
     private val directionVariants: MutableList<Position> = mutableListOf()
 
-    private val piratesSkippingAction = mutableMapOf<Player, Pirate>()
+    private val piratesSkippingAction = mutableMapOf<Pirate, Int>()
 
     private val changedCellsSequence = mutableListOf<Cell>()
 
-    private val sequence = mutableListOf<Cell>()
+    private val sequenceStopped = mutableListOf<Cell>()
 
     private val winningCoinsSum = IntWrapper(37) //По правилам
 
@@ -41,13 +42,14 @@ class DefaultGame(
         playerPirateNumberValidateOrThrow(nextPlayer, gameAction.pirateNumber)
 
         changedCellsSequence.clear()
+        directionVariants.clear()
 
         var counter = 100
         val flag = BooleanWrapper(true)
         val pirate = nextPlayer.pirateTeam.getPirateByNumber(gameAction.pirateNumber)!!
 
         changedCellsSequence.add(pirate.cell!!)
-        sequence.add(pirate.cell!!)
+        sequenceStopped.add(pirate.cell!!)
 
         val substitutionCell = CellWrapper(null)
         val newPosition = PositionWrapper(Position(gameAction.x, gameAction.y))
@@ -63,7 +65,7 @@ class DefaultGame(
 
             if (substitutionCell.cell == null) {
                 changedCellsSequence.add(newCell)
-                sequence.add(newCell)
+                sequenceStopped.add(newCell)
             } else {
                 substitutionCell.cell = null
             }
@@ -75,7 +77,7 @@ class DefaultGame(
                 piratesSkippingAction,
                 changedCellsSequence,
                 directionVariants,
-                sequence,
+                sequenceStopped,
                 nextPlayer,
                 pirate,
                 newCell,
@@ -96,12 +98,12 @@ class DefaultGame(
             println("Зацикливание")
         }
         setNextPlayer()
-        sequence.clear()
+        sequenceStopped.clear()
         return GameActionResultFinished(changedCellsSequence.toList())
     }
 
     override fun getPiratesSkippingAction(): List<Pirate> {
-        return piratesSkippingAction.values.toList()
+        return piratesSkippingAction.keys.toList()
     }
 
     private fun setNextPlayer() {
@@ -117,19 +119,24 @@ class DefaultGame(
         TODO()
     }
 
+    // TODO: 23.07.2022 Не привязываться к размерам поля для гибкости класса 
     private fun checkPossibilityToActOrThrow(pirate: Pirate, newCell: Cell) {
         val diff = pirate.cell!!.position.sub(newCell.position)
         val directionVariantIndex = directionVariants.indexOf(newCell.position)
-        if (diff.x + diff.y > 2 && directionVariantIndex == -1 ||
-            directionVariantIndex != -1 && directionVariants[directionVariantIndex] != newCell.position) {
+        if ((diff.x.absoluteValue > 1 || diff.y.absoluteValue > 1) && directionVariantIndex == -1 ||
+            newCell.position.x == 0 && newCell.position.y == 0 ||
+            newCell.position.x == 12 && newCell.position.y == 12 ||
+            newCell.position.x == 12 && newCell.position.y == 0 ||
+            newCell.position.x == 0 && newCell.position.y == 12 ||
+            newCell.position == pirate.cell!!.position
+        ) {
             throw Exception("Нет возможности так ходить")
         }
     }
 
     private fun playerPirateNumberValidateOrThrow(player: Player, number: Int) {
         if (player.pirateTeam.getPirateByNumber(number) == null) {
-            // TODO: 14.07.2022 Исключение: если нет пирата с таким номером
-            throw Exception("Не тот пират")
+            throw Exception("Нет пиратов с таким номером")
         }
     }
 

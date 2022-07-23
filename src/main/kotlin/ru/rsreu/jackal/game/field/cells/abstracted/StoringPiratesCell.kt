@@ -2,13 +2,11 @@ package ru.rsreu.jackal.game.field.cells.abstracted
 
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandlerInitializer
-import ru.rsreu.jackal.game.action_result_handling.initers.FinishedHandlerInitializer
-import ru.rsreu.jackal.game.action_result_handling.initers.FinishedWithFightHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedWithFightHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.field.cells.CoinMoveableCell
 import ru.rsreu.jackal.game.field.cells.PirateMoveableCell
-import ru.rsreu.jackal.game.field.cells.action.CellActionResult
-import ru.rsreu.jackal.game.field.cells.action.CellActionResultType
 
 abstract class StoringPiratesCell(position: Position) : OpenableCell(position), PirateMoveableCell, CoinMoveableCell {
 
