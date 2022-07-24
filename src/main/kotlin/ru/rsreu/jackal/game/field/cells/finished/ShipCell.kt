@@ -41,7 +41,10 @@ class ShipCell(private val player: Player, position: Position, water: WaterCell)
         this.water = newWater
         this.position = newWater.position
         newWater.pirates.forEach { pirate ->
-            this.applyAction(pirate, false)
+            if (pirate.playerId == player.id) {
+                this.pirates.add(pirate)
+                pirate.move(this)
+            }
         }
         return old
     }

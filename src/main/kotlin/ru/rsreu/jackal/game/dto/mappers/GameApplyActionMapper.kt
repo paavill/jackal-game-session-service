@@ -7,6 +7,7 @@ import ru.rsreu.jackal.game.action.GameActionResultFinished
 import ru.rsreu.jackal.game.action.GameActionResultWithAbleToAct
 import ru.rsreu.jackal.game.dto.*
 import ru.rsreu.jackal.game.entities.Player
+import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.abstracted.RotatedCell
 import ru.rsreu.jackal.game.field.cells.finished.ShipCell
 import ru.rsreu.jackal.game.field.cells.finished.WaterCell
@@ -48,8 +49,12 @@ class GameApplyActionMapper {
                 CellResponse(cell.cellType, cell.position, cell.rotation, cell.pirates.map { pirate ->
                     pirate.number
                 }, cell.coinsNumber)
-            } else {
+            } else if (!cell.isClose) {
                 CellResponse(cell.cellType, cell.position, 0, cell.pirates.map { pirate ->
+                    pirate.number
+                }, cell.coinsNumber)
+            } else {
+                CellResponse(CellType.HIDDEN, cell.position, 0, cell.pirates.map { pirate ->
                     pirate.number
                 }, cell.coinsNumber)
             }

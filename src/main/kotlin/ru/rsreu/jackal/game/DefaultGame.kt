@@ -8,7 +8,6 @@ import ru.rsreu.jackal.game.action_result_handling.DirectionQuestionHandler
 import ru.rsreu.jackal.game.action_result_handling.finished.FinishedWithAbleToActHandler
 import ru.rsreu.jackal.game.action_result_handling.in_process.InProcess
 import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedWithKillHandlerInitializer
-import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedWithPirateSaveHandlerInitializer
 import ru.rsreu.jackal.game.action_result_handling.util.*
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
@@ -88,6 +87,10 @@ class DefaultGame(
 
             val result = newCell.applyAction(pirate, gameAction.needTakeCoin)
 
+            if (substitutionCell.cell != null) {
+                field.cells[newPosition.position.y][newPosition.position.x].pirates.addAll(newCell.pirates)
+            }
+
             if (substitutionCell.cell == null) {
                 changedCellsSequence.add(newCell)
                 sequenceStopped.add(newCell)
@@ -133,6 +136,7 @@ class DefaultGame(
 
         setNextPlayer()
         updateSkipping()
+        checkKilledPirates()
 
         sequenceStopped.clear()
         return GameActionResultFinished(changedCellsSequence.toList())
@@ -157,7 +161,7 @@ class DefaultGame(
 
     private fun updateSkipping() {
         val toClear = mutableListOf<Pirate>()
-        piratesSkippingAction.forEach{(pirate, number) ->
+        piratesSkippingAction.forEach { (pirate, number) ->
             if (number == 0 && nextPlayer.pirateTeam.isPirateIn(pirate)) {
                 toClear.add(pirate)
             }
@@ -198,10 +202,18 @@ class DefaultGame(
         }
     }
 
+    private fun checkKilledPirates() {
+        playersAndShips.forEach { (player, shipCell) ->
+            shipCell.water.pirates.forEach { pirate ->
+                players[pirate.playerId]!!.pirateTeam.killPirate(pirate)
+            }
+            shipCell.water.pirates.clear()
+        }
+    }
+
     private fun playerPirateNumberValidateOrThrow(player: Player, number: Int) {
         if (player.pirateTeam.getPirateByNumber(number) == null) {
             throw Exception("Нет пиратов с таким номером")
         }
     }
-
 }
