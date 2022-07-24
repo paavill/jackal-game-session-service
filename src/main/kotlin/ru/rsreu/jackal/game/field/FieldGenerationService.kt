@@ -32,12 +32,18 @@ class FieldGenerationService private constructor(){
             }
             val mutable = field.toMutableList()
             val firstRow = mutable[0]
+            val secRow = mutable[1]
             val lastRow = mutable[12]
+            val preLastRow = mutable[11]
             mutable.remove(firstRow)
+            mutable.remove(secRow)
             mutable.remove(lastRow)
+            mutable.remove(preLastRow)
             mutable.shuffle()
             mutable.add(0, firstRow)
-            mutable.add(lastRow)
+            mutable.add(1, secRow)
+            mutable.add(11, preLastRow)
+            mutable.add(12, lastRow)
             return DefaultGameField(mutable.toList())
         }
     }
