@@ -12,7 +12,7 @@ class CrocodileCell(position: Position) : ZeroPirateStoringCell(position) {
 
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResultHandlerInitializer {
         val result = super.applyAction(pirate, needTakeCoins)
-        if (isClose) {
+        if (!isClose) {
             return result
         }
         return FinishedWithAbleToActHandlerInitializer()

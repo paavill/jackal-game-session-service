@@ -8,7 +8,6 @@ import ru.rsreu.jackal.game.entities.Player
 class FinishedWithPirateActionSkip(
     private val skipNumber: Int,
     private val flag: BooleanWrapper,
-    private val nextPlayer: Player,
     private val pirate: Pirate,
     private val piratesSkippingAction: MutableMap<Pirate, Int>
 ) : ActionResultHandler {

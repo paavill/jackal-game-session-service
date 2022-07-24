@@ -15,15 +15,14 @@ abstract class StoringPiratesCell(position: Position) : OpenableCell(position), 
     final override val pirates: MutableList<Pirate> = mutableListOf()
 
     override fun setCoin() {
-        coinsNumber++
+        if (!isClose) {
+            coinsNumber++
+        }
     }
 
     override fun removeCoin() {
         if (coinsNumber > 0) {
             coinsNumber--
-        } else {
-            // TODO: 19.07.2022
-            throw Exception("Слишком мало монет")
         }
     }
 

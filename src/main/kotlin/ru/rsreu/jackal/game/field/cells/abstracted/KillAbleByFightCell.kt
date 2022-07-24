@@ -15,4 +15,5 @@ abstract class KillAbleByFightCell(position: Position) : ThreePiratesStoringCell
         }
         return result
     }
+
 }

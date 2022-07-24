@@ -73,8 +73,6 @@ class DefaultGame(
             sequenceStopped.add(pirate.cell!!)
         }
 
-
-        updateSkipping()
         while (flag.boolean && counter > 0) {
             var newCell = field.cells[newPosition.position.y][newPosition.position.x]
 
@@ -134,6 +132,8 @@ class DefaultGame(
         }
 
         setNextPlayer()
+        updateSkipping()
+
         sequenceStopped.clear()
         return GameActionResultFinished(changedCellsSequence.toList())
     }
@@ -177,9 +177,7 @@ class DefaultGame(
         val diff = pirate.cell!!.position.sub(newCell.position)
         val directionVariantIndex = directionVariants.indexOf(newCell.position)
         val temp = directionVariants.map { e -> e }
-        if (directionVariants.size > 0) {
-            directionVariants.clear()
-        }
+
         if ((diff.x.absoluteValue > 1 || diff.y.absoluteValue > 1) && temp.isEmpty() ||
             directionVariantIndex == -1 && temp.isNotEmpty() ||
             newCell.position.x == 0 && newCell.position.y == 0 ||
@@ -193,6 +191,10 @@ class DefaultGame(
 
         if (piratesSkippingAction[pirate] != null) {
             throw Exception("Пират спит, дай ему отдохнуть")
+        }
+
+        if (directionVariants.size > 0) {
+            directionVariants.clear()
         }
     }
 

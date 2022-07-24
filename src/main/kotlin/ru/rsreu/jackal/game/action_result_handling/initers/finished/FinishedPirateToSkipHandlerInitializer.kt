@@ -10,7 +10,6 @@ class FinishedPirateToSkipHandlerInitializer(private val skipNumb: Int) : CellAc
         return FinishedWithPirateActionSkip(
             skipNumb,
             initData.flag,
-            initData.nextPlayer,
             initData.pirate,
             initData.piratesSkippingAction
         )
