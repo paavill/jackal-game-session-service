@@ -30,13 +30,6 @@ class FieldGenerationService private constructor(){
                     }
                 }
             }
-            field.forEach { row ->
-                print("[ ")
-                row.forEach { cell ->
-                    print(" | " + String.format("%35s", cell.cellType.toString() + " " + cell.position.toString()) + " | ")
-                }
-                println(" ]")
-            }
             return DefaultGameField(field)
         }
     }

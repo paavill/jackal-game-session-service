@@ -158,7 +158,7 @@ class DefaultGame(
     private fun updateSkipping() {
         val toClear = mutableListOf<Pirate>()
         piratesSkippingAction.forEach{(pirate, number) ->
-            if (number == 0) {
+            if (number == 0 && nextPlayer.pirateTeam.isPirateIn(pirate)) {
                 toClear.add(pirate)
             }
         }

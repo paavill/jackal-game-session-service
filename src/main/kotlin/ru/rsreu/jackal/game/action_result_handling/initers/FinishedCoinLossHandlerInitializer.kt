@@ -8,6 +8,6 @@ class FinishedCoinLossHandlerInitializer(private val init: CellActionResultHandl
 
     override fun init(initData: InitDataTransferObject): ActionResultHandler {
         val wrappedHandler = init.init(initData)
-        return FinishedCoinLossHandler(initData.flag, initData.winningCoinsSum)
+        return FinishedCoinLossHandler(initData.flag, initData.winningCoinsSum, wrappedHandler)
     }
 }

@@ -15,10 +15,10 @@ class WaterCell(position: Position) : KillAbleByFightCell(position), AbleSendToW
     override var isClose: Boolean = false
     var ship: ShipCell? = null
 
-    override fun setCoin() {
+    override fun setCoin(coinNumber: Int) {
         //Необходимо для отсутсвия функционала установки монеты
         if (ship != null) {
-            ship!!.setCoin()
+            ship!!.setCoin(coinNumber)
         }
     }
 

@@ -12,6 +12,8 @@ class ShipCell(private val player: Player, position: Position, water: WaterCell)
     override val cellType: CellType = CellType.SHIP
     override var position: Position = position
         private set
+    override var isClose: Boolean = false
+
     var water = water
         private set
 
@@ -19,8 +21,9 @@ class ShipCell(private val player: Player, position: Position, water: WaterCell)
         this.setAll(player.pirateTeam.getAll())
     }
 
-    override fun removeCoin() {
+    override fun removeCoin() : Int {
         //Должен быть пустым, чтобы нельзя было уносить монеты с корабля
+        return 0
     }
 
     override fun setPirate(pirate: Pirate): CellActionResultHandlerInitializer {

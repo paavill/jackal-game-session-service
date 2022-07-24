@@ -43,7 +43,7 @@ class GameApplyActionMapper {
                 val ship = cell.ship!!
                 CellResponse(ship.cellType, cell.position, 0, ship.pirates.map { pirate ->
                     pirate.number
-                }, cell.coinsNumber)
+                }, ship.coinsNumber)
             } else if (cell is RotatedCell) {
                 CellResponse(cell.cellType, cell.position, cell.rotation, cell.pirates.map { pirate ->
                     pirate.number

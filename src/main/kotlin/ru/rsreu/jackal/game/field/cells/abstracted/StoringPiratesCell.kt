@@ -14,16 +14,17 @@ abstract class StoringPiratesCell(position: Position) : OpenableCell(position), 
         protected set
     final override val pirates: MutableList<Pirate> = mutableListOf()
 
-    override fun setCoin() {
-        if (!isClose) {
-            coinsNumber++
+    override fun setCoin(coinNumber: Int) {
+        if (!isClose && coinNumber < 2) {
+            coinsNumber += coinNumber
         }
     }
 
-    override fun removeCoin() {
+    override fun removeCoin() : Int {
         if (coinsNumber > 0) {
             coinsNumber--
         }
+        return 1
     }
 
     override fun setPirate(pirate: Pirate): CellActionResultHandlerInitializer {
@@ -50,12 +51,12 @@ abstract class StoringPiratesCell(position: Position) : OpenableCell(position), 
 
         old.removePirate(pirate)
         if (needTakeCoins) {
-            old.removeCoin()
+            if (!this.isClose) {
+                 val number = old.removeCoin()
+                 this.setCoin(number)
+            }
         }
         val actionType = this.setPirate(pirate)
-        if (needTakeCoins) {
-            this.setCoin()
-        }
 
         super.applyAction(pirate, false) //всегда возвратит FINISHED; см. Openable
         return actionType
