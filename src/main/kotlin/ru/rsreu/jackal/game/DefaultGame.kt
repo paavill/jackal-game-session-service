@@ -85,6 +85,16 @@ class DefaultGame(
                 newCell = substitutionCell.cell!!
             }
 
+            if (substitutionCell.cell == newCell) {
+                field.cells[newPosition.position.y][newPosition.position.x].pirates.addAll(newCell.pirates)
+                changedCellsSequence.add(field.cells[newPosition.position.y][newPosition.position.x])
+                sequenceStopped.add(field.cells[newPosition.position.y][newPosition.position.x])
+                substitutionCell.cell = null
+            } else {
+                changedCellsSequence.add(newCell)
+                sequenceStopped.add(newCell)
+            }
+
             val result = newCell.applyAction(pirate, gameAction.needTakeCoin)
 
             val initData = InitDataTransferObject(
@@ -105,16 +115,6 @@ class DefaultGame(
 
             val handler = result.init(initData)
             handler.handle()
-
-            if (substitutionCell.cell == newCell) {
-                field.cells[newPosition.position.y][newPosition.position.x].pirates.addAll(newCell.pirates)
-                changedCellsSequence.add(field.cells[newPosition.position.y][newPosition.position.x])
-                sequenceStopped.add(field.cells[newPosition.position.y][newPosition.position.x])
-                substitutionCell.cell = null
-            } else if (substitutionCell.cell == null) {
-                changedCellsSequence.add(newCell)
-                sequenceStopped.add(newCell)
-            }
 
             if (handler is DirectionQuestionHandler) {
                 forDirectionChoicePirate = pirate // TODO: 23.07.2022 Убрать в хендер 
