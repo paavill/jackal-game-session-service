@@ -86,10 +86,8 @@ class DefaultGame(
             }
 
             if (substitutionCell.cell == newCell) {
-                field.cells[newPosition.position.y][newPosition.position.x].pirates.addAll(newCell.pirates)
                 changedCellsSequence.add(field.cells[newPosition.position.y][newPosition.position.x])
                 sequenceStopped.add(field.cells[newPosition.position.y][newPosition.position.x])
-                substitutionCell.cell = null
             } else {
                 changedCellsSequence.add(newCell)
                 sequenceStopped.add(newCell)
@@ -115,6 +113,11 @@ class DefaultGame(
 
             val handler = result.init(initData)
             handler.handle()
+
+            if (substitutionCell.cell == newCell) {
+                field.cells[newPosition.position.y][newPosition.position.x].pirates.addAll(newCell.pirates)
+                substitutionCell.cell = null
+            }
 
             if (handler is DirectionQuestionHandler) {
                 forDirectionChoicePirate = pirate // TODO: 23.07.2022 Убрать в хендер 
