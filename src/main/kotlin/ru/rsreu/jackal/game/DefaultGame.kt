@@ -38,6 +38,8 @@ class DefaultGame(
 
     private val winningCoinsSum = IntWrapper(37) //По правилам
 
+    private val substitutionCell = CellWrapper(null)
+
     override fun getPlayersAndShips(): Map<Player, List<ShipCell>> {
         return playersAndShips.map { (player, ship) ->
             player to listOf(ship)
@@ -54,14 +56,7 @@ class DefaultGame(
         var needToValidate = true
         val pirate = nextPlayer.pirateTeam.getPirateByNumber(gameAction.pirateNumber)!!
 
-        // TODO: 23.07.2022 Сделать подругому 
-        if (forDirectionChoicePirate != null && pirate != forDirectionChoicePirate) {
-            throw Exception("Ходите пиратом, перед которым стоит выбор")
-        } else {
-            forDirectionChoicePirate = null
-        }
 
-        val substitutionCell = CellWrapper(null)
         val newPosition = PositionWrapper(Position(gameAction.x, gameAction.y))
         if (pirate.cell!! is ShipCell && field.cells[newPosition.position.y][newPosition.position.x] is WaterCell) {
             val ship = pirate.cell!! as ShipCell
@@ -69,7 +64,16 @@ class DefaultGame(
             sequenceStopped.add(ship.water)
         } else {
             changedCellsSequence.add(pirate.cell!!)
-            sequenceStopped.add(pirate.cell!!)
+            if (forDirectionChoicePirate == null) {
+                sequenceStopped.add(pirate.cell!!)
+            }
+        }
+
+        // TODO: 23.07.2022 Сделать подругому
+        if (forDirectionChoicePirate != null && pirate != forDirectionChoicePirate) {
+            throw Exception("Ходите пиратом, перед которым стоит выбор")
+        } else {
+            forDirectionChoicePirate = null
         }
 
         while (flag.boolean && counter > 0) {
@@ -85,10 +89,7 @@ class DefaultGame(
                 newCell = substitutionCell.cell!!
             }
 
-            if (substitutionCell.cell == newCell) {
-                changedCellsSequence.add(field.cells[newPosition.position.y][newPosition.position.x])
-                sequenceStopped.add(field.cells[newPosition.position.y][newPosition.position.x])
-            } else {
+            if (substitutionCell.cell != newCell) {
                 changedCellsSequence.add(newCell)
                 sequenceStopped.add(newCell)
             }
@@ -115,12 +116,12 @@ class DefaultGame(
             handler.handle()
 
             if (substitutionCell.cell == newCell) {
-                field.cells[newPosition.position.y][newPosition.position.x].pirates.addAll(newCell.pirates)
-                substitutionCell.cell = null
+                field.cells[newPosition.position.y][newPosition.position.x].applyAction(pirate, gameAction.needTakeCoin)
             }
 
             if (handler is DirectionQuestionHandler) {
-                forDirectionChoicePirate = pirate // TODO: 23.07.2022 Убрать в хендер 
+                forDirectionChoicePirate = pirate // TODO: 23.07.2022 Убрать в хендер
+                substitutionCell.cell = null
                 return GameActionResultDirectionQuestion(changedCellsSequence, directionVariants)
             } else if (handler is FinishedWithAbleToActHandler) {
                 return GameActionResultFinished(changedCellsSequence)
@@ -139,8 +140,9 @@ class DefaultGame(
         setNextPlayer()
         updateSkipping()
         checkKilledPirates()
-
+        substitutionCell.cell = null
         sequenceStopped.clear()
+
         return GameActionResultFinished(changedCellsSequence.toList())
     }
 

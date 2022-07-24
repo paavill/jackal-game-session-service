@@ -1,5 +1,6 @@
 package ru.rsreu.jackal.game.field
 
+import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.entities.Player
 import ru.rsreu.jackal.game.field.cells.Cell
 import ru.rsreu.jackal.game.field.cells.finished.ShipCell
@@ -18,23 +19,33 @@ class DefaultGameField(cells: List<List<Cell>>) : Field {
     fun setShips(players: List<Player>) : Map<Player, ShipCell> {
         var playerIndex = 0
         val ships = mutableMapOf<Player, ShipCell>()
-        cells.forEachIndexed {
-                y, cells ->
-            run {
-                cells.forEachIndexed { x, cell ->
-                    run {
-                        if (cell is WaterCell && (x == 6 || y == 6)) {
-                            if (playerIndex < players.size) {
-                                cell.ship = ShipCell(players[playerIndex], cell.position.copy(), cell)
-                                ships[players[playerIndex]] = (cell.ship!!)
-                                playerIndex++
-                            }
-                        }
-                    }
-                }
+        when (players.size) {
+            1 -> {
+                ships[players[0]] = setFirst(players, 0, 6, 0)
+            }
+            2 -> {
+                ships[players[0]] = setFirst(players, 0, 0, 0)
+                ships[players[1]] = setFirst(players, 1, 0, 6)
+            }
+            3 -> {
+                ships[players[0]] = setFirst(players, 0, 0, 0)
+                ships[players[1]] = setFirst(players, 1, 0, 6)
+                ships[players[2]] = setFirst(players, 2, 6, 12)
+            }
+            4 -> {
+                ships[players[0]] = setFirst(players, 0, 0, 0)
+                ships[players[1]] = setFirst(players, 1, 0, 6)
+                ships[players[2]] = setFirst(players, 2, 6, 12)
+                ships[players[3]] = setFirst(players, 3, 12, 6)
             }
         }
         this.isInitFinished = true
         return ships.toMap()
     }
+
+    private fun setFirst(players: List<Player>, playerIndex: Int, x: Int, y: Int) : ShipCell {
+        (cells[y][x] as WaterCell).ship = ShipCell(players[playerIndex], Position(x, y), cells[y][x] as WaterCell)
+        return (cells[y][x] as WaterCell).ship!!
+    }
+
 }

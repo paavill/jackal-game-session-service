@@ -16,10 +16,11 @@ class InProcessRepeatActionHandler(
 ) :
     ActionResultHandler, InProcess {
     override fun handle() {
-        val cell = sequence[sequence.size - 2]
+        var cell = sequence[1]
         if (cell is HorseCell) {
             substitutionCell.cell = HorseCell(newCell.position)
         } else {
+            cell = sequence[sequence.size - 2]
             newPosition.position = newCell.position.add(newCell.position.sub(cell.position))
         }
     }
