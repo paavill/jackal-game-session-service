@@ -44,6 +44,12 @@ class FieldGenerationService private constructor(){
             mutable.add(1, secRow)
             mutable.add(11, preLastRow)
             mutable.add(12, lastRow)
+
+            mutable.forEachIndexed { y, cells ->
+                cells.forEachIndexed { x, cell ->
+                    cell.position = Position(x, y)
+                }
+            }
             return DefaultGameField(mutable.toList())
         }
     }

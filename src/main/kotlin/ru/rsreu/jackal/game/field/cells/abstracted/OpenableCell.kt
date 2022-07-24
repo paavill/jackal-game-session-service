@@ -6,7 +6,7 @@ import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedHand
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.field.cells.Cell
 
-abstract class OpenableCell(override val position: Position) : Cell {
+abstract class OpenableCell(override var position: Position) : Cell {
     override var isClose: Boolean = true
         protected set
 

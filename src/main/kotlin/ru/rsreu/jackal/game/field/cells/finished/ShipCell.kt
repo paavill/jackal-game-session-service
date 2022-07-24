@@ -11,7 +11,7 @@ import ru.rsreu.jackal.game.field.cells.abstracted.ThreePiratesStoringCell
 class ShipCell(private val player: Player, position: Position, water: WaterCell) : ThreePiratesStoringCell(position) {
     override val cellType: CellType = CellType.SHIP
     override var position: Position = position
-        private set
+
     override var isClose: Boolean = false
 
     var water = water

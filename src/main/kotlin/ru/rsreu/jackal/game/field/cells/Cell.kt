@@ -11,6 +11,6 @@ interface Cell {
     val cellType: CellType
     val pirates: MutableList<Pirate>
     val coinsNumber: Int
-    val position: Position
+    var position: Position
     fun applyAction(pirate: Pirate, needTakeCoins: Boolean) : CellActionResultHandlerInitializer
 }
