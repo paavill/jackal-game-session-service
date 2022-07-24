@@ -17,23 +17,22 @@ class DefaultGameField(cells: List<List<Cell>>) : Field {
     private var isInitFinished = false
 
     fun setShips(players: List<Player>) : Map<Player, ShipCell> {
-        var playerIndex = 0
         val ships = mutableMapOf<Player, ShipCell>()
         when (players.size) {
             1 -> {
                 ships[players[0]] = setFirst(players, 0, 6, 0)
             }
             2 -> {
-                ships[players[0]] = setFirst(players, 0, 0, 0)
+                ships[players[0]] = setFirst(players, 0, 6, 0)
                 ships[players[1]] = setFirst(players, 1, 0, 6)
             }
             3 -> {
-                ships[players[0]] = setFirst(players, 0, 0, 0)
+                ships[players[0]] = setFirst(players, 0, 6, 0)
                 ships[players[1]] = setFirst(players, 1, 0, 6)
                 ships[players[2]] = setFirst(players, 2, 6, 12)
             }
             4 -> {
-                ships[players[0]] = setFirst(players, 0, 0, 0)
+                ships[players[0]] = setFirst(players, 0, 6, 0)
                 ships[players[1]] = setFirst(players, 1, 0, 6)
                 ships[players[2]] = setFirst(players, 2, 6, 12)
                 ships[players[3]] = setFirst(players, 3, 12, 6)

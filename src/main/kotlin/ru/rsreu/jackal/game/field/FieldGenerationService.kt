@@ -30,14 +30,15 @@ class FieldGenerationService private constructor(){
                     }
                 }
             }
-            field.forEach { row ->
-                print("[ ")
-                row.forEach { cell ->
-                    print(" | " + String.format("%35s", cell.cellType.toString() + " " + cell.position.toString()) + " | ")
-                }
-                println(" ]")
-            }
-            return DefaultGameField(field)
+            val mutable = field.toMutableList()
+            val firstRow = mutable[0]
+            val lastRow = mutable[12]
+            mutable.remove(firstRow)
+            mutable.remove(lastRow)
+            mutable.shuffle()
+            mutable.add(0, firstRow)
+            mutable.add(lastRow)
+            return DefaultGameField(mutable.toList())
         }
     }
 
