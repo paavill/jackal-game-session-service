@@ -6,12 +6,11 @@ import ru.rsreu.jackal.game.action_result_handling.initers.FinishedCoinLossHandl
 import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedHandlerInitializer
 import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedWithAbleToActHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
-import ru.rsreu.jackal.game.field.cells.AbleSendFromWater
 import ru.rsreu.jackal.game.field.cells.AbleSendToWater
 import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.abstracted.KillAbleByFightCell
 
-class WaterCell(position: Position) : KillAbleByFightCell(position), AbleSendToWater, AbleSendFromWater {
+class WaterCell(position: Position) : KillAbleByFightCell(position), AbleSendToWater {
     override val cellType: CellType = CellType.WATER
     override var isClose: Boolean = false
     var ship: ShipCell? = null

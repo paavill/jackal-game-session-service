@@ -87,17 +87,6 @@ class DefaultGame(
 
             val result = newCell.applyAction(pirate, gameAction.needTakeCoin)
 
-            if (substitutionCell.cell != null) {
-                field.cells[newPosition.position.y][newPosition.position.x].pirates.addAll(newCell.pirates)
-            }
-
-            if (substitutionCell.cell == null) {
-                changedCellsSequence.add(newCell)
-                sequenceStopped.add(newCell)
-            } else {
-                substitutionCell.cell = null
-            }
-
             val initData = InitDataTransferObject(
                 flag,
                 players,
@@ -116,6 +105,16 @@ class DefaultGame(
 
             val handler = result.init(initData)
             handler.handle()
+
+            if (substitutionCell.cell == newCell) {
+                field.cells[newPosition.position.y][newPosition.position.x].pirates.addAll(newCell.pirates)
+                changedCellsSequence.add(field.cells[newPosition.position.y][newPosition.position.x])
+                sequenceStopped.add(field.cells[newPosition.position.y][newPosition.position.x])
+                substitutionCell.cell = null
+            } else if (substitutionCell.cell == null) {
+                changedCellsSequence.add(newCell)
+                sequenceStopped.add(newCell)
+            }
 
             if (handler is DirectionQuestionHandler) {
                 forDirectionChoicePirate = pirate // TODO: 23.07.2022 Убрать в хендер 
@@ -188,7 +187,8 @@ class DefaultGame(
             newCell.position.x == 12 && newCell.position.y == 12 ||
             newCell.position.x == 12 && newCell.position.y == 0 ||
             newCell.position.x == 0 && newCell.position.y == 12 ||
-            newCell.position == pirate.cell!!.position
+            newCell.position == pirate.cell!!.position ||
+            newCell !is WaterCell && pirate.cell!! is WaterCell
         ) {
             throw Exception("Нет возможности так ходить")
         }
