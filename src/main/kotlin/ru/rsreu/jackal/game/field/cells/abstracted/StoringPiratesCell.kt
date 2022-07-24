@@ -3,10 +3,13 @@ package ru.rsreu.jackal.game.field.cells.abstracted
 import ru.rsreu.jackal.game.Position
 import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandlerInitializer
 import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedHandlerInitializer
+import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedWithAbleToActHandlerInitializer
 import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedWithFightHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
+import ru.rsreu.jackal.game.field.cells.AbleSendFromWater
 import ru.rsreu.jackal.game.field.cells.CoinMoveableCell
 import ru.rsreu.jackal.game.field.cells.PirateMoveableCell
+import ru.rsreu.jackal.game.field.cells.finished.WaterCell
 
 abstract class StoringPiratesCell(position: Position) : OpenableCell(position), PirateMoveableCell, CoinMoveableCell {
 
@@ -20,7 +23,7 @@ abstract class StoringPiratesCell(position: Position) : OpenableCell(position), 
         }
     }
 
-    override fun removeCoin() : Int {
+    override fun removeCoin(): Int {
         if (coinsNumber > 0) {
             coinsNumber--
         }
@@ -44,22 +47,26 @@ abstract class StoringPiratesCell(position: Position) : OpenableCell(position), 
     }
 
     override fun applyAction(pirate: Pirate, needTakeCoins: Boolean): CellActionResultHandlerInitializer {
-
         val old = pirate.move(this)
-        old as PirateMoveableCell
-        old as CoinMoveableCell
+        if (old is WaterCell && this is AbleSendFromWater || old !is WaterCell) {
+            old as PirateMoveableCell
+            old as CoinMoveableCell
 
-        old.removePirate(pirate)
-        if (needTakeCoins) {
-            if (!this.isClose) {
-                 val number = old.removeCoin()
-                 this.setCoin(number)
+            old.removePirate(pirate)
+            if (needTakeCoins) {
+                if (!this.isClose) {
+                    val number = old.removeCoin()
+                    this.setCoin(number)
+                }
             }
-        }
-        val actionType = this.setPirate(pirate)
+            val actionType = this.setPirate(pirate)
 
-        super.applyAction(pirate, false) //всегда возвратит FINISHED; см. Openable
-        return actionType
+            super.applyAction(pirate, false) //всегда возвратит FINISHED; см. Openable
+            return actionType
+        } else {
+            pirate.move(old)
+            return FinishedWithAbleToActHandlerInitializer()
+        }
     }
 
     private fun checkFight(newPirate: Pirate, oldPirates: MutableList<Pirate>): Boolean {

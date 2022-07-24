@@ -5,10 +5,11 @@ import ru.rsreu.jackal.game.action_result_handling.initers.CellActionResultHandl
 import ru.rsreu.jackal.game.action_result_handling.initers.finished.FinishedWithKillHandlerInitializer
 import ru.rsreu.jackal.game.entities.Pirate
 import ru.rsreu.jackal.game.entities.Player
+import ru.rsreu.jackal.game.field.cells.AbleSendFromWater
 import ru.rsreu.jackal.game.field.cells.CellType
 import ru.rsreu.jackal.game.field.cells.abstracted.ThreePiratesStoringCell
 
-class ShipCell(private val player: Player, position: Position, water: WaterCell) : ThreePiratesStoringCell(position) {
+class ShipCell(private val player: Player, position: Position, water: WaterCell) : ThreePiratesStoringCell(position), AbleSendFromWater {
     override val cellType: CellType = CellType.SHIP
     override var position: Position = position
         private set
@@ -39,6 +40,9 @@ class ShipCell(private val player: Player, position: Position, water: WaterCell)
         val old = this.water
         this.water = newWater
         this.position = newWater.position
+        newWater.pirates.forEach { pirate ->
+            this.applyAction(pirate, false)
+        }
         return old
     }
 }

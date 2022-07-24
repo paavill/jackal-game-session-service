@@ -19,7 +19,6 @@ class InProcessRepeatActionHandler(
         val cell = sequence[sequence.size - 2]
         if (cell is HorseCell) {
             substitutionCell.cell = HorseCell(newCell.position)
-            flag.boolean = false
         } else {
             newPosition.position = newCell.position.add(newCell.position.sub(cell.position))
         }
